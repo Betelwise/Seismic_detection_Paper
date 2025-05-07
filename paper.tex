@@ -12,9 +12,9 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Conference Paper Title*\\
-{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
-should not be used}
+\title{Asteroseismology  AI-Driven Seismic Event Detection for Extra-Terrestrial Missions\\
+% {\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
+% should not be used}
 \thanks{Identify applicable funding agency here. If none, delete this.}
 }
 
@@ -34,13 +34,34 @@ khababnazir10@gmail.com}
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+    Planetary seismology faces significant challenges in transmitting continuous seismic data
+    due to bandwidth and power constraints. Traditional event detection methods generate 
+    numerous false positives, leading to inefficient data transmission. This paper presents 
+    Asteroseismology, an AI-enhanced seismic event detection framework that integrates 
+    classical phase-picking algorithms with machine learning to optimize seismic data 
+    processing for space missions. The workflow begins with automatic bandpass filtering, 
+    outlier removal, and normalization to enhance signal clarity. A Short-Term Average to 
+    Long-Term Average (STA/LTA) analysis is then applied to detect candidate events, followed 
+    by a filtering mechanism that refines initial picks based on characteristic function 
+    slopes. The final step employs a Convolutional Neural Network (CNN), trained on seismic 
+    data from the Apollo Lunar Surface Experiments Package (ALSEP) and NASA’s Mars InSight
+    mission, to distinguish true seismic events from noise, ensuring high precision while 
+    minimizing false detections. Designed for computational efficiency, the system
+    processes a month’s worth of seismic data in under 60 seconds on an average processor.
+    It also features six tunable parameters, allowing adaptation to different planetary
+    environments and mission constraints. Initial results demonstrate that the CNN, despite
+    limited training, achieves over 80 percent event detection accuracy with a false
+    positive rate of approximately 5 percent. Future enhancements include refining the
+    CNN within an Auxiliary Classifier Conditional GAN (AC-GAN) framework to further 
+    improve detection reliability. This AI-driven approach enables autonomous seismic 
+    data analysis onboard spacecraft, significantly reducing the need for raw data 
+    transmission and paving the way for more efficient planetary and lunar seismology 
+    missions.
 \end{abstract}
 
 \begin{IEEEkeywords}
-component, formatting, style, styling, insert
+    Seismic Event Detection, Planetary Seismology, Machine Learning, 
+    CNN, STA/LTA, AI in Space Exploration.
 \end{IEEEkeywords}
 
 \section{Introduction}
