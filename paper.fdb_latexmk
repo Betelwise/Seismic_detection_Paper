@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1746659094.11 "e:/Projects_dont_move/Projects_Pending/Seismic_detection_Paper/paper.tex" "paper.pdf" "paper" 1746659095.09901 0
+["pdflatex"] 1748014547.10856 "e:/Projects_dont_move/Projects_Pending/Seismic_detection_Paper/paper.tex" "paper.pdf" "paper" 1748014548.1232 0
   "C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
   "C:/Program Files/MiKTeX/fonts/tfm/adobe/times/ptmb7t.tfm" 1136754254 2172 fd0c924230362ff848a33632ed45dc23 ""
   "C:/Program Files/MiKTeX/fonts/tfm/adobe/times/ptmb8r.tfm" 1136754254 4524 6bce29db5bc272ba5f332261583fee9c ""
@@ -65,11 +65,11 @@
   "C:/Program Files/MiKTeX/tex/latex/l3backend/l3backend-pdftex.def" 1704400941 30006 57b07afb710ee2f649c65cfbafda39c1 ""
   "C:/Program Files/MiKTeX/tex/latex/psnfss/ot1ptm.fd" 1585253778 1007 15056f4a61917ceed3a44e4ac11fcc52 ""
   "C:/Program Files/MiKTeX/tex/latex/xcolor/xcolor.sty" 1700127522 55487 80a65caedd3722f4c20a14a69e785d8f ""
-  "C:/Users/chali/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1746648337 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
-  "C:/Users/chali/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1746648964 24215271 bbc0667dc92e202060131121a80e4fbb ""
-  "e:/Projects_dont_move/Projects_Pending/Seismic_detection_Paper/paper.tex" 1746659091 34451 7d7406f15cde93336f1b8be11a8fec96 ""
-  "paper.aux" 1746659094 3377 ecd391279e816c2195b04dc867189e74 "pdflatex"
-  "paper.tex" 1746659091 34451 7d7406f15cde93336f1b8be11a8fec96 ""
+  "C:/Users/chali/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1748014533 82507 a9eef8696c92627b87e9975edea03b2a ""
+  "C:/Users/chali/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1748014544 24215272 a35a2d81153f107274f54fcaa218f7ab ""
+  "e:/Projects_dont_move/Projects_Pending/Seismic_detection_Paper/paper.tex" 1748014526 34469 81e1aa7d55bba6a93977c91ca4d9fca2 ""
+  "paper.aux" 1748014547 3377 ecd391279e816c2195b04dc867189e74 "pdflatex"
+  "paper.tex" 1748014526 34469 81e1aa7d55bba6a93977c91ca4d9fca2 ""
   (generated)
   "paper.aux"
   "paper.log"

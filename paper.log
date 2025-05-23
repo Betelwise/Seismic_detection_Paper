@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.5.8)  8 MAY 2025 04:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.5.23)  23 MAY 2025 20:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -271,15 +271,15 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (C:\Program Files\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Underfull \hbox (badness 1721) in paragraph at lines 73--74
+Underfull \hbox (badness 1721) in paragraph at lines 82--83
 \OT1/ptm/m/n/10 tab-lished clas-si-cal seis-mic pro-cess-ing tech-niques with a
  []
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 77.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 86.
 (C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 77.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 86.
  (C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1{C:/Users/chali/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc}
@@ -287,30 +287,30 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ]
 
-LaTeX Warning: Reference `fig:framework_overview' on page 2 undefined on input line 108.
+LaTeX Warning: Reference `fig:framework_overview' on page 2 undefined on input line 117.
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 122--123
+Underfull \hbox (badness 10000) in paragraph at lines 131--132
 []\OT1/ptm/b/n/10 Outlier Re-moval: \OT1/ptm/m/n/10 Short-duration, high-amplitude
  []
 
 
-Underfull \hbox (badness 6641) in paragraph at lines 122--123
+Underfull \hbox (badness 6641) in paragraph at lines 131--132
 \OT1/ptm/m/n/10 data, are iden-ti-fied and re-moved or at-ten-u-ated.
  []
 
 
-Underfull \hbox (badness 1394) in paragraph at lines 145--146
+Underfull \hbox (badness 1394) in paragraph at lines 154--155
 \OT1/ptm/m/n/10 ex-am-ple, STA/LTA win-dow lengths, trig-ger/detrigger
  []
 
 [3]
-Underfull \hbox (badness 1694) in paragraph at lines 168--169
+Underfull \hbox (badness 1694) in paragraph at lines 177--178
 []\OT1/ptm/m/n/10 Initial eval-u-a-tions of the As-ter-o-seis-mol-ogy frame-work
  []
 
 
-LaTeX Warning: Reference `fig:roc_curve' on page 4 undefined on input line 172.
+LaTeX Warning: Reference `fig:roc_curve' on page 4 undefined on input line 181.
 
 [4] [5]
 
@@ -338,7 +338,7 @@ LaTeX Warning: There were undefined references.
  ) 
 Here is how much of TeX's memory you used:
  4215 strings out of 474485
- 65480 string characters out of 5753550
+ 65480 string characters out of 5753549
  1945542 words of memory out of 5000000
  26464 multiletter control sequences out of 15000+600000
  597309 words of font info for 109 fonts, out of 8000000 for 9000
