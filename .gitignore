@@ -1,0 +1,14 @@
+# Ignore all LaTeX-generated files
+*.aux
+*.log
+*.out
+*.toc
+*.gz
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+
+# Keep the final document (PDF)
+!*.pdf
