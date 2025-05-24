@@ -12,50 +12,44 @@
 \begin{document}
 
 \title{Asteroseismology: AI-Driven Seismic Event Detection for Extra-Terrestrial Missions\\
-% {\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
-% should not be used}
-\thanks{This work was supported in part by [Identify applicable funding agency here if any, otherwise delete or state self-funded].}
+    % {\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
+    % should not be used}
+    \thanks{This work was supported in part by [Identify applicable funding agency here if any, otherwise delete or state self-funded].}
 }
 
 \author{\IEEEauthorblockN{Muhammad Zain Ali}
-\IEEEauthorblockA{\textit{Dept. of Physics} \\
-\textit{Quaid-i-Azam University}\\
-Islamabad, Pakistan \\
-zain@betelwise.com}
-\and
-\IEEEauthorblockN{Khabab Nazir}
-\IEEEauthorblockA{\textit{Dept. of Physics} \\
-\textit{Quaid-i-Azam University}\\
-Islamabad, Pakistan \\
-khababnazir10@gmail.com}
+    \IEEEauthorblockA{\textit{Dept. of Physics} \\
+        \textit{Quaid-i-Azam University}\\
+        Islamabad, Pakistan \\
+        zain@betelwise.com}
+    \and
+    \IEEEauthorblockN{Khabab Nazir}
+    \IEEEauthorblockA{\textit{Dept. of Physics} \\
+        \textit{Quaid-i-Azam University}\\
+        Islamabad, Pakistan \\
+        khababnazir10@gmail.com}
 }
 
 \maketitle
 
 \begin{abstract}
-    Planetary seismology faces significant challenges in transmitting continuous seismic data
-    due to bandwidth and power constraints. Traditional event detection methods generate
-    numerous false positives, leading to inefficient data transmission. This paper presents
-    Asteroseismology, an AI-enhanced seismic event detection framework that integrates
-    classical phase-picking algorithms with machine learning to optimize seismic data
-    processing for space missions. The workflow begins with automatic bandpass filtering,
-    outlier removal, and normalization to enhance signal clarity. A Short-Term Average to
-    Long-Term Average (STA/LTA) analysis is then applied to detect candidate events, followed
-    by a filtering mechanism that refines initial picks based on characteristic function
-    slopes. The final step employs a Convolutional Neural Network (CNN), trained on seismic
-    data from the Apollo Lunar Surface Experiments Package (ALSEP) and NASA’s Mars InSight
-    mission, to distinguish true seismic events from noise, ensuring high precision while
-    minimizing false detections. Designed for computational efficiency, the system
-    processes a month’s worth of seismic data in under 60 seconds on an average processor.
-    It also features six tunable parameters, allowing adaptation to different planetary
-    environments and mission constraints. Initial results demonstrate that the CNN, despite
-    limited training, achieves over 80 percent event detection accuracy with a false
-    positive rate of approximately 5 percent. Future enhancements include refining the
-    CNN within an Auxiliary Classifier Conditional GAN (AC-GAN) framework to further
-    improve detection reliability. This AI-driven approach enables autonomous seismic
-    data analysis onboard spacecraft, significantly reducing the need for raw data
-    transmission and paving the way for more efficient planetary and lunar seismology
-    missions.
+    Planetary seismology faces significant challenges in transmitting continuous seismic data due to bandwidth and power
+    constraints. Traditional event detection methods generate numerous false positives, leading to inefficient data
+    transmission. This paper presents Asteroseismology, an AI-enhanced seismic event detection framework that integrates
+    classical phase-picking algorithms with machine learning to optimize seismic data processing for space missions. The
+    workflow begins with automatic bandpass filtering, outlier removal, and normalization to enhance signal clarity. A
+    Short-Term Average to Long-Term Average (STA/LTA) analysis is then applied to detect candidate events, followed by a
+    filtering mechanism that refines initial picks based on characteristic function slopes. The final step employs a
+    Convolutional Neural Network (CNN), trained on seismic data from the Apollo Lunar Surface Experiments Package
+    (ALSEP) and NASA’s Mars InSight mission, to distinguish true seismic events from noise, ensuring high precision
+    while minimizing false detections. Designed for computational efficiency, the system processes a month’s worth of
+    seismic data in under 60 seconds on an average processor. It also features six tunable parameters, allowing
+    adaptation to different planetary environments and mission constraints. Initial results demonstrate that the CNN,
+    despite limited training, achieves over 80 percent event detection accuracy with a false positive rate of
+    approximately 5 percent. Future enhancements include refining the CNN within an Auxiliary Classifier Conditional GAN
+    (AC-GAN) framework to further improve detection reliability. This AI-driven approach enables autonomous seismic data
+    analysis onboard spacecraft, significantly reducing the need for raw data transmission and paving the way for more
+    efficient planetary and lunar seismology missions.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -64,56 +58,103 @@ khababnazir10@gmail.com}
 \end{IEEEkeywords}
 
 \section{Introduction}
-The exploration of planetary bodies beyond Earth, such as the Moon and Mars, 
-provides invaluable insights into planetary formation, evolution, and internal 
-structure \cite{b8}. Seismology plays a pivotal role in these endeavors, as seismic waves 
-carry information about the interior of a planet, including its crustal thickness, mantle 
-structure, and core state \cite{b9, b10}. Missions like the Apollo Lunar Surface 
-Experiments Package (ALSEP) \cite{b11} and the recent NASA Mars InSight mission \cite{b12} 
-have deployed seismometers that generate vast quantities of data. However, transmitting 
-this continuous stream of seismic data back to Earth is a formidable challenge due to 
-severe constraints on bandwidth, power, and data volume inherent in deep-space missions 
-\cite{b13}.
+    The seismic exploration of planetary bodies like the Moon and Mars is fundamental to understanding their internal
+    structure, geological evolution, and potential for past or present habitability \cite{Lognonne2005, Lognonne2019}.
+    Data from missions such as the Apollo Passive Seismic Experiment (PSE) \cite{Nakamura1982} and the ongoing Mars
+    InSight mission with its SEIS instrument\cite{Lognonne2019} have provided invaluable windows into these worlds. A
+    primary constraint in planetary seismology, as emphasized by \cite{Civilini2021}, is the costly power and bandwidth
+    requirements associated with delivering continuous seismic data back to Earth from distant missions.
 
-Traditional seismic event detection algorithms, often relying on methods like the Short-Term Average 
-to Long-Term Average (STA/LTA) ratio \cite{b14}, are computationally inexpensive but tend to produce 
-a high number of false positives, especially in noisy extra-terrestrial environments \cite{b15}. This 
-inefficiency leads to the transmission of large volumes of non-pertinent data, consuming precious mission 
-resources. Consequently, there is a critical need for robust, efficient, and autonomous onboard systems 
-capable of accurately identifying true seismic events and prioritizing data for telemetry.
+    A fundamental challenge in planetary seismology is the efficient management and transmission of the vast quantities
+    of continuous seismic data generated by lander-based instruments. Deep-space missions operate under severe
+    constraints on power, bandwidth, and data volume (Lorenz, 2015, as cited in Civilini et al., 2021; Lognonné et al.,
+    2019). For instance, the SEIS instrument on the Mars InSight mission, while typically downlinking continuous data at
+    2 samples per second (sps), generates a significant data volume; \cite{Lognonne2019} note that its full data
+    generation capability is orders of magnitude larger than its telemetry allocation. \cite{Civilini2021} quantified
+    that the telemetry for SEIS consumes approximately 1.5\% of the InSight lander's total power output. If we were to
+    consider data rates comparable to those from some Apollo experiments, which utilized sampling rates such as 6.625 Hz
+    for the Passive Seismic Experiment (PSE) mid-period instruments \cite{Nunn2020}, the data volume and consequently
+    the power required for transmission by a modern system like SEIS would consume an even more substantial portion of a
+    lander's available power. Extrapolating further, \cite{Civilini2021} projected that a similar seismic setup for a
+    mission to Europa could demand 8.8–13.2\% of the lander's power solely for seismic data transmission. These figures
+    underscore the critical necessity for sophisticated on-board data processing and event detection algorithms to
+    prioritize scientifically valuable data segments for downlink, thereby making the most efficient use of limited
+    mission resources.
 
-Machine learning (ML), particularly deep learning techniques like Convolutional Neural Networks (CNNs), 
-has emerged as a powerful tool for analyzing complex patterns in geophysical data \cite{b16, b17}. In 
-planetary seismology, CNNs have shown promise for tasks such as detecting moonquakes from Apollo data. 
-For instance, Civilini et al. (2021) demonstrated the use of CNNs trained on spectrograms of Earth-based 
-seismic events, employing transfer learning to successfully identify moonquakes in the Apollo PSE and 
-LSPE datasets \cite{favPaper}. Their work highlighted the potential of ML to overcome the limitations of local 
-data scarcity by leveraging non-local training sets.
+    Traditional automatic event detection algorithms, like the Short-Term Average to Long-Term Average (STA/LTA) ratio
+    (Allen, 1982, as cited in \cite{Civilini2021}), while computationally inexpensive, often struggle with the low
+    signal-to-noise ratios and complex noise environments encountered on planetary surfaces. This can lead to a high
+    rate of false positives, thereby inefficiently utilizing the scarce telemetry resources \cite{Civilini2021}.
+    Furthermore, the unique characteristics of seismic wave propagation on bodies like the Moon, with its highly
+    scattering near-surface layer leading to prolonged codas \cite{Dainty1981, Nakamura1982} , make robust event
+    detection and phase-picking particularly challenging.
 
-Building upon these advancements, this paper introduces "Asteroseismology," a novel AI-driven framework
-designed for efficient and accurate seismic event detection on extra-terrestrial missions. Our 
-approach uniquely integrates established classical seismic processing techniques with a lightweight CNN. 
-This hybrid system aims to harness the interpretability and efficiency of conventional algorithms for 
-initial event candidacy while leveraging the pattern recognition capabilities of CNNs for final,
-high-precision event verification. The Asteroseismology framework is designed for onboard implementation, 
-emphasizing computational efficiency and adaptability to diverse planetary environments through 
-tunable parameters. By processing data from both lunar (ALSEP) and Martian (InSight) missions, we 
-demonstrate the system's potential to significantly reduce false positives, optimize data transmission, 
-and enhance the scientific return of current and future planetary seismology missions.
+    In response to these challenges, machine learning (ML) approaches, especially deep learning techniques like
+    Convolutional Neural Networks (CNNs), have gained traction in planetary science. \cite{Civilini2021} effectively
+    demonstrated that CNNs, trained on spectrograms of Earth-based seismic events and utilizing transfer learning, could
+    accurately catalog moonquakes from Apollo PSE and LSPE data, even in the absence of extensive local training
+    datasets. This work underscored the potential of ML to generalize from available data and perform robust
+    classification.
 
-The main contributions of this paper are:
-\begin{itemize}
-    \item A hybrid seismic event detection framework combining classical phase-picking with a CNN classifier for enhanced accuracy and efficiency.
-    \item A detailed methodology for data preprocessing, initial event detection, and CNN-based refinement tailored for planetary seismic data.
-    \item Demonstration of the system's computational efficiency and adaptability using data from Apollo and InSight missions.
-    \item Initial performance results indicating high detection accuracy with a low false positive rate, paving the way for autonomous onboard seismic analysis.
-\end{itemize}
+    This paper introduces "Asteroseismology," an AI-enhanced seismic event detection framework specifically designed to
+    address the data optimization needs of extra-terrestrial missions. Our framework uniquely integrates a pipeline of
+    classical phase-picking algorithms with a lightweight CNN. This hybrid approach begins with conventional signal
+    conditioning, including automatic bandpass filtering, outlier removal, and normalization. Candidate seismic events
+    are then identified using STA/LTA analysis, followed by a novel filtering stage based on characteristic function
+    slopes to refine these initial picks. The core innovation lies in then feeding these refined candidate events,
+    represented as 1D waveform segments augmented with auxiliary statistical features, into a CNN. This CNN, trained on
+    a diverse dataset including lunar data from the Apollo missions and Martian data from the InSight mission, is tasked
+    with the final discrimination between true seismic events and noise. By leveraging the efficiency of classical
+    algorithms for initial data reduction and candidate selection, our system aims to reduce the computational burden on
+    the CNN, allowing it to perform high-precision classification. Asteroseismology is designed for computational
+    efficiency and adaptability through tunable parameters, making it a strong candidate for future onboard autonomous
+    data processing, thereby significantly enhancing the scientific return of planetary seismology missions by
+    optimizing precious data transmission resources.
 
-This paper is organized as follows: Section \ref{sec:related_work} reviews related work in seismic event 
-detection and machine learning applications in seismology. Section \ref{sec:methodology} details the 
-proposed Asteroseismology framework. Section \ref{sec:results_discussion} presents initial results and 
-discusses their implications. Finally, Section \ref{sec:conclusion} concludes the paper and outlines future
-research directions.
+\section{Background}
+    \subsection{Lunar Seismology}
+        The foundation of extra-terrestrial seismology was laid by the NASA Apollo missions (1969-1977). The Apollo
+        Lunar Surface Experiments Package (ALSEP) successfully deployed a network of four primary seismic stations
+        (Apollo 12, 14, 15, and 16), complemented by the short-lived Apollo 11 seismometer and the Lunar Seismic
+        Profiling Experiment (LSPE) geophone array on Apollo 17 \cite{Nakamura1982, Lognonne2005, Nunn2020}
+        %(Nakamura et al., 1981; Lognonné, 2005; Nunn et al., 2020a).
+        These Passive Seismic Experiments (PSE) typically included three-component long-period (LP, later referred to as
+        mid-period or MP) seismometers and a single-component short-period (SP) seismometer
+        \cite{Nunn2020}%(Nunn et al., 2020a).
+
+        Lunar seismic data revealed a surprisingly active Moon, characterized by several types of moonquakes: deep
+        moonquakes (DMQs) occurring at depths of 700-1200 km and exhibiting strong tidal periodicities; shallow
+        moonquakes (or HFTs - High-Frequency Teleseismic events) at shallower depths (50-220 km); thermal moonquakes
+        caused by surface temperature variations; and meteoroid impacts \cite{Nakamura1982, Lognonne2005}
+        %(Nakamura et al., 1982; Lognonné, 2005)
+        . A key characteristic of lunar seismograms is the intense scattering within the lunar megaregolith, resulting
+        in prolonged codas and making phase identification, particularly for S-waves, exceptionally difficult
+        \cite{Dainty1981, Garcia2019}
+        %(Dainty and Toksöz, 1981; Garcia et al., 2019).
+
+        The initial cataloging of these events, notably by \cite{Nakamura1982}, relied heavily on visual inspection and
+        waveform cross-correlation to identify repeating DMQs from distinct source regions or "nests." These efforts
+        provided the first constraints on the Moon's internal structure, including its crust, mantle, and the likely
+        presence of a small, partially molten core \cite{Weber2011,Garcia2019}
+        %(Weber et al., 2011; Garcia et al., 2019).
+
+        More recently, with the digitization and improved accessibility of Apollo data, new analytical techniques have
+        been applied. Traditional methods continue to be refined, for example, for re-evaluating Apollo 17 LSPE data
+        (Heffels et al., 2017). Machine learning has also begun to make inroads. Knapmeyer-Endrun \& Hammer (2015)
+        utilized Hidden Markov Models for event detection in Apollo 16 data. Significantly, Civilini et al. (2021)
+        demonstrated the successful application of Convolutional Neural Networks (CNNs), trained on spectrograms of
+        Earth-based seismic events via transfer learning, to detect and catalog moonquakes from both PSE and LSPE data.
+        This approach highlighted the potential of ML to identify events even with limited or non-local training data,
+        by learning characteristic spectral features. Majstorović et al. (2024, preprint/submitted) further explored ML
+        by using random forests to classify DMQ source regions based on lunar orbital parameters related to their
+        occurrence times, showcasing an approach independent of waveform data for initial source region estimation.
+
+    \subsection{ Martian Seismology}
+    Mars has been the focus of renewed seismic interest. The first attempt to place a seismometer on Mars was with the
+    Viking landers in 1976. The Viking 2 lander's seismometer, mounted on the lander deck, provided data primarily on
+    wind-induced lander vibrations, and only one candidate seismic event was tentatively identified (Anderson et al.,
+    1977; Lognonné, 2005). The on-deck deployment and instrument sensitivity were major limitations.
+
 
 \section{Related Work}
 \label{sec:related_work}
@@ -205,23 +246,23 @@ Crucially, the hybrid nature of the system, particularly the pre-filtering by co
 Table \ref{tab:performance_summary} (placeholder) would typically summarize these key performance indicators. Figure \ref{fig:roc_curve} (placeholder) would show the Receiver Operating Characteristic (ROC) curve for the CNN classifier.
 
 \begin{table}[htbp]
-\caption{Preliminary Performance Summary of Asteroseismology (Illustrative)}
-\begin{center}
-\begin{tabular}{|l|c|}
-\hline
-\textbf{Metric} & \textbf{Value} \\
-\hline
-Detection Accuracy (Events) & $>$80\% \\
-False Positive Rate (Noise) & $\sim$5\% \\
-Precision & [e.g., 0.85] \\
-Recall & [e.g., 0.82] \\
-F1-Score & [e.g., 0.83] \\
-Processing Speed (1 month data) & $<$60 seconds \\
-\hline
-\multicolumn{2}{l}{Note: Values are indicative based on abstract; actual results needed.}
-\end{tabular}
-\label{tab:performance_summary}
-\end{center}
+    \caption{Preliminary Performance Summary of Asteroseismology (Illustrative)}
+    \begin{center}
+        \begin{tabular}{|l|c|}
+            \hline
+            \textbf{Metric}                 & \textbf{Value} \\
+            \hline
+            Detection Accuracy (Events)     & $>$80\%        \\
+            False Positive Rate (Noise)     & $\sim$5\%      \\
+            Precision                       & [e.g., 0.85]   \\
+            Recall                          & [e.g., 0.82]   \\
+            F1-Score                        & [e.g., 0.83]   \\
+            Processing Speed (1 month data) & $<$60 seconds  \\
+            \hline
+            \multicolumn{2}{l}{Note: Values are indicative based on abstract; actual results needed.}
+        \end{tabular}
+        \label{tab:performance_summary}
+    \end{center}
 \end{table}
 
 % \begin{figure}[htbp]
@@ -266,29 +307,38 @@ In conclusion, the Asteroseismology framework represents a significant step towa
 The authors would like to thank the NASA Planetary Data System (PDS) for providing access to the Apollo ALSEP and Mars InSight mission data. We also acknowledge the developers of open-source software packages used in this research, including [mention specific libraries like Obspy, TensorFlow/Keras, Scikit-learn if used].
 
 \begin{thebibliography}{00}
-\bibitem{favPaper} F. Civilini, R.C. Weber, Z. Jiang, D. Phillips, and W. David Pan, ``Detecting moonquakes using convolutional neural networks, a non-local training set, and transfer learning,'' \emph{Geophys. J. Int.}, vol. 225, no. 3, pp. 2120--2134, Mar. 2021.
-\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73. 
-\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
-\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished. 
-\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press. 
-\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982]. 
-\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
-\bibitem{b8} S. C. Solomon et al., ``New perspectives on ancient Mars,'' \emph{Science}, vol. 307, no. 5713, pp. 1214--1220, Feb. 2005.
-\bibitem{b9} P. Lognonné, ``Planetary seismology,'' \emph{Annu. Rev. Earth Planet. Sci.}, vol. 33, pp. 571--604, May 2005.
-\bibitem{b10} W. B. Banerdt et al., ``Initial results from the InSight mission on Mars,'' \emph{Nature Geoscience}, vol. 13, pp. 183--189, Mar. 2020.
-\bibitem{b11} Y. Nakamura, G. V. Latham, and H. J. Dorman, ``Apollo lunar seismic experiment – Final summary,'' \emph{J. Geophys. Res.}, vol. 87, no. S01, p. A117, 1982.
-\bibitem{b12} P. Lognonné et al., ``SEIS: Insight’s seismic experiment for internal structure of Mars,'' \emph{Space Sci. Rev.}, vol. 215, no. 12, Feb. 2019.
-\bibitem{b13} R. D. Lorenz, ``Energy cost of acquiring and transmitting science data on deep-space missions,'' \emph{J. Spacecr. Rockets}, vol. 52, no. 6, pp. 1693--1697, Nov. 2015.
-\bibitem{b14} R. Allen, ``Automatic earthquake recognition and timing from single traces,'' \emph{Bull. Seismol. Soc. Am.}, vol. 68, no. 5, pp. 1521--1532, Oct. 1978.
-\bibitem{b15} M. P. Panning et al., ``Expected seismicity and the seismic noise environment of Europa,'' \emph{J. Geophys. Res. Planets}, vol. 123, no. 1, pp. 163--179, Jan. 2018.
-\bibitem{b16} T. Perol, M. Gharbi, and M. Denolle, ``Convolutional neural network for earthquake detection and location,'' \emph{Sci. Adv.}, vol. 4, no. 2, p. e1700578, Feb. 2018.
-\bibitem{b17} Z. E. Ross, M. J. Meier, and E. Hauksson, ``Generalized seismic phase detection with deep learning,'' \emph{Bull. Seismol. Soc. Am.}, vol. 108, no. 5A, pp. 2894--2901, Oct. 2018.
-\bibitem{b18} G. C. Beroza and S. G. Shelly, ``Detecting and characterizing earthquake swarms,'' \emph{Science}, vol. 319, no. 5865, pp. 906--909, Feb. 2008. (Note: this is a review mentioning template matching, original template matching papers are older, e.g., Gibbons \& Ringdal 2006)
-\bibitem{b19} S. Mostafa, M. R. Zare, and S. M. J. Aleali, ``Seismic signal classification using support vector machine and particle swarm optimization,'' \emph{J. Seismol.}, vol. 19, pp. 619--630, 2015.
-\bibitem{b20} W. J. N. R. Mousavi, S. M., Horton, S. P., et al., ``CRED: A deep residual network of convolutional and recurrent units for earthquake signal detection,'' \emph{Sci. Rep.}, vol. 9, no. 1, p. 10267, Jul. 2019.
-\bibitem{b21} C. Clinton et al., ``The Marsquake catalogue from InSight, S01 to S08,'' \emph{Phys. Earth Planet. Inter.}, vol. 310, p. 106595, Jan. 2021.
-\bibitem{b22} A. Odena, C. Olah, and J. Shlens, ``Conditional image synthesis with auxiliary classifier GANs,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2017, pp. 2642--2651.
-\bibitem{b26} F. Baer, M., \& Kradolfer, U. (1987). An automatic phase picker for local and teleseismic events. \emph{Bulletin of the Seismological Society of America}, 77(4), 1437-1445.
+    \bibitem{Civilini2021} F. Civilini, R.C. Weber, Z. Jiang, D. Phillips, and W. David Pan, ``Detecting moonquakes using convolutional neural networks, a non-local training set, and transfer learning,'' \emph{Geophys. J. Int.}, vol. 225, no. 3, pp. 2120--2134, Mar. 2021.
+    \bibitem{Lognonne2005}  P. Lognonné, ``Planetary seismology,'' \emph{Annu. Rev. Earth Planet. Sci.}, vol. 33, pp. 571--604, May 2005.
+    \bibitem{Lognonne2019} P. Lognonné, W. B. Banerdt, V. Dehant, et al., ``SEIS: The seismic experiment for internal structure of InSight,'' \emph{Space Sci. Rev.}, vol. 215, Art. no. 12, Feb. 2019, doi: 10.1007/s11214-018-0574-6.
+    \bibitem{Nakamura1982} Y. Nakamura, G. V. Latham, and H. J. Dorman, ``Apollo lunar seismic experiment – Final summary,'' \emph{J. Geophys. Res.}, vol. 87, no. S01, p. A117, 1982.
+    \bibitem{Nakamura1981} Y. Nakamura, ``Lunar seismicity and the internal structure of the Moon,'' \emph{J. Geophys. Res.}, vol. 86, no. B10, pp. 9413--9424, Oct. 1981.
+    \bibitem{Lorenz2015} R. D. Lorenz, ``Energy cost of acquiring and transmitting science data on deep-space missions,'' \emph{J. Spacecr. Rockets}, vol. 52, no. 6, pp. 1693--1697, Nov. 2015.
+    \bibitem{Nunn2020} C. Nunn, R. F. Garcia, Y. Nakamura, et al., ``Lunar seismology: A data and instrumentation review,'' \emph{Space Sci. Rev.}, vol. 216, no. 89, pp. 1--37, 2020.
+    \bibitem{Dainty1981} A. Dainty and M. Toksöz, ``Seismic codas on the Earth and the Moon: A comparison,'' \emph{Phys. Earth Planet. Inter.}, vol. 26, no. 4, pp. 250--260, 1981.
+    \bibitem{Garcia2019} R. F. Garcia, A. Khan, M. Drilleau, et al., ``Lunar seismology: An update on interior structure models,'' \emph{Space Sci. Rev.}, vol. 215, no. 50, pp. 1--50, 2019.
+    \bibitem{Weber2011} R. C. Weber, P. Y. Lin, E. J. Garnero, Q. Williams, and P. Lognonné, ``Seismic detection of the lunar core,'' \emph{Science}, vol. 331, no. 6015, pp. 309--312, Jan. 2011.
+    % \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73. 
+    % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
+    % \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished. 
+    % \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press. 
+    % \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982]. 
+    % \bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+    % \bibitem{b8} S. C. Solomon et al., ``New perspectives on ancient Mars,'' \emph{Science}, vol. 307, no. 5713, pp. 1214--1220, Feb. 2005.
+    % \bibitem{b9} P. Lognonné, ``Planetary seismology,'' \emph{Annu. Rev. Earth Planet. Sci.}, vol. 33, pp. 571--604, May 2005.
+    % \bibitem{b10} W. B. Banerdt et al., ``Initial results from the InSight mission on Mars,'' \emph{Nature Geoscience}, vol. 13, pp. 183--189, Mar. 2020.
+    % \bibitem{b12} P. Lognonné et al., ``SEIS: Insight’s seismic experiment for internal structure of Mars,'' \emph{Space Sci. Rev.}, vol. 215, no. 12, Feb. 2019.
+    % \bibitem{b13} R. D. Lorenz, ``Energy cost of acquiring and transmitting science data on deep-space missions,'' \emph{J. Spacecr. Rockets}, vol. 52, no. 6, pp. 1693--1697, Nov. 2015.
+    % \bibitem{b14} R. Allen, ``Automatic earthquake recognition and timing from single traces,'' \emph{Bull. Seismol. Soc. Am.}, vol. 68, no. 5, pp. 1521--1532, Oct. 1978.
+    % \bibitem{b15} M. P. Panning et al., ``Expected seismicity and the seismic noise environment of Europa,'' \emph{J. Geophys. Res. Planets}, vol. 123, no. 1, pp. 163--179, Jan. 2018.
+    % \bibitem{b16} T. Perol, M. Gharbi, and M. Denolle, ``Convolutional neural network for earthquake detection and location,'' \emph{Sci. Adv.}, vol. 4, no. 2, p. e1700578, Feb. 2018.
+    % \bibitem{b17} Z. E. Ross, M. J. Meier, and E. Hauksson, ``Generalized seismic phase detection with deep learning,'' \emph{Bull. Seismol. Soc. Am.}, vol. 108, no. 5A, pp. 2894--2901, Oct. 2018.
+    % \bibitem{b18} G. C. Beroza and S. G. Shelly, ``Detecting and characterizing earthquake swarms,'' \emph{Science}, vol. 319, no. 5865, pp. 906--909, Feb. 2008. (Note: this is a review mentioning template matching, original template matching papers are older, e.g., Gibbons \& Ringdal 2006)
+    % \bibitem{b19} S. Mostafa, M. R. Zare, and S. M. J. Aleali, ``Seismic signal classification using support vector machine and particle swarm optimization,'' \emph{J. Seismol.}, vol. 19, pp. 619--630, 2015.
+    % \bibitem{b20} W. J. N. R. Mousavi, S. M., Horton, S. P., et al., ``CRED: A deep residual network of convolutional and recurrent units for earthquake signal detection,'' \emph{Sci. Rep.}, vol. 9, no. 1, p. 10267, Jul. 2019.
+    % \bibitem{b21} C. Clinton et al., ``The Marsquake catalogue from InSight, S01 to S08,'' \emph{Phys. Earth Planet. Inter.}, vol. 310, p. 106595, Jan. 2021.
+    % \bibitem{b22} A. Odena, C. Olah, and J. Shlens, ``Conditional image synthesis with auxiliary classifier GANs,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2017, pp. 2642--2651.
+    % \bibitem{b26} F. Baer, M., \& Kradolfer, U. (1987). An automatic phase picker for local and teleseismic events. \emph{Bulletin of the Seismological Society of America}, 77(4), 1437-1445.
+
 
 \end{thebibliography}
 

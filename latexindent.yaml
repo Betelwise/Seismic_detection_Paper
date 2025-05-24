@@ -1,0 +1,72 @@
+# Basic configuration for latexindent.pl
+# This file should be named latexindent.yaml and placed in your project's root directory.
+
+# --- General Settings ---
+# For more options, refer to the latexindent.pl documentation:
+# type "texdoc latexindent" in your terminal or search for it on CTAN.
+
+# --- Line Break Modifications ---
+# This section controls how lines are broken.
+modifyLineBreaks:
+  # This is a key option to enable text wrapping.
+  # It tries to wrap lines of text (like in paragraphs or items)
+  # to a certain column width.
+  textWrapOptions:
+    # Set your desired column width for text wrapping.
+    # 80 is a common choice, but you can adjust it.
+    columns: 80
+    # You can also tell it to try and break before certain characters
+    # if it helps, e.g., before prepositions or conjunctions.
+    # breakBefore:
+    #   - 'and'
+    #   - 'or'
+    #   - 'but'
+    #   - 'for'
+    #   - 'a'
+    #   - 'an'
+    #   - 'the'
+    #   - 'of'
+    #   - 'in'
+    #   - 'on'
+    #   - 'at'
+    #   - 'to'
+    #   - 'from'
+    #   - 'with'
+    #   - 'by'
+    #   - 'as'
+    #   - 'if'
+    #   - 'when'
+    #   - 'while'
+    #   - 'where'
+    #   - 'because'
+    #   - 'although'
+    #   - 'though'
+    #   - 'since'
+    #   - 'unless'
+    #   - 'until'
+    #   - 'so'
+    #   - 'that'
+    #   - 'which'
+    #   - 'who'
+    #   - 'whom'
+    #   - 'whose'
+
+  # You can also specify how to handle indentation for wrapped lines.
+  # For example, indent wrapped lines by 2 spaces:
+  # indentation: 2 # This might be a default or controlled elsewhere too.
+
+# --- Indentation of Environments and Braces ---
+# Default indentation settings are usually quite good.
+# Example: Indent 'itemize' environments by 2 spaces.
+# indentationOperations:
+#   environments:
+#     itemize:
+#       indentAfterBeginning: 2
+#       indentBeforeEnd: 0
+
+# --- Spacing ---
+# Controls spacing around operators, commas, etc.
+# Defaults are often sensible.
+# For example, ensure one space after commas:
+# spacingAfter:
+#   comma: 1
