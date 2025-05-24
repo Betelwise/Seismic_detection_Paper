@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.5.23)  24 MAY 2025 20:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.5.23)  24 MAY 2025 23:29
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -273,92 +273,90 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 )) [1{C:/Users/chali/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc}
 
 
-]
+] [2]
 
-LaTeX Warning: Citation `b14' on page 2 undefined on input line 164.
-
-
-LaTeX Warning: Citation `b26' on page 2 undefined on input line 164.
+LaTeX Warning: Citation `b14' on page 3 undefined on input line 199.
 
 
-LaTeX Warning: Citation `b15' on page 2 undefined on input line 164.
+LaTeX Warning: Citation `b26' on page 3 undefined on input line 199.
 
 
-LaTeX Warning: Citation `b18' on page 2 undefined on input line 166.
-
-[2]
-
-LaTeX Warning: Citation `b19' on page 3 undefined on input line 169.
+LaTeX Warning: Citation `b15' on page 3 undefined on input line 199.
 
 
-LaTeX Warning: Citation `b16' on page 3 undefined on input line 169.
+LaTeX Warning: Citation `b18' on page 3 undefined on input line 201.
 
 
-LaTeX Warning: Citation `b17' on page 3 undefined on input line 171.
+LaTeX Warning: Citation `b19' on page 3 undefined on input line 204.
 
 
-LaTeX Warning: Citation `b20' on page 3 undefined on input line 171.
+LaTeX Warning: Citation `b16' on page 3 undefined on input line 204.
 
 
-LaTeX Warning: Citation `favPaper' on page 3 undefined on input line 174.
+LaTeX Warning: Citation `b17' on page 3 undefined on input line 206.
 
 
-LaTeX Warning: Citation `b21' on page 3 undefined on input line 176.
+LaTeX Warning: Citation `b20' on page 3 undefined on input line 206.
 
 
-LaTeX Warning: Citation `favPaper' on page 3 undefined on input line 178.
+LaTeX Warning: Citation `favPaper' on page 3 undefined on input line 209.
 
 
-LaTeX Warning: Reference `fig:framework_overview' on page 3 undefined on input line 182.
+LaTeX Warning: Citation `b21' on page 3 undefined on input line 211.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 196--197
+LaTeX Warning: Citation `favPaper' on page 3 undefined on input line 213.
+
+
+LaTeX Warning: Reference `fig:framework_overview' on page 3 undefined on input line 217.
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 231--232
 []\OT1/ptm/b/n/10 Outlier Re-moval: \OT1/ptm/m/n/10 Short-duration, high-amplitude
  []
 
 
-Underfull \hbox (badness 6641) in paragraph at lines 196--197
+Underfull \hbox (badness 6641) in paragraph at lines 231--232
 \OT1/ptm/m/n/10 data, are iden-ti-fied and re-moved or at-ten-u-ated.
  []
 
 
-LaTeX Warning: Citation `b14' on page 3 undefined on input line 203.
-
-[3]
-
-LaTeX Warning: Citation `b11' on page 4 undefined on input line 212.
+LaTeX Warning: Citation `b14' on page 4 undefined on input line 238.
 
 
-LaTeX Warning: Citation `b12' on page 4 undefined on input line 212.
+LaTeX Warning: Citation `b11' on page 4 undefined on input line 247.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 218.
+
+LaTeX Warning: Citation `b12' on page 4 undefined on input line 247.
+
+LaTeX Font Info:    Trying to load font information for U+msa on input line 253.
 (C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 218.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 253.
  (C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 1394) in paragraph at lines 219--220
+Underfull \hbox (badness 1394) in paragraph at lines 254--255
 \OT1/ptm/m/n/10 ex-am-ple, STA/LTA win-dow lengths, trig-ger/detrigger
  []
 
-
-Underfull \hbox (badness 1694) in paragraph at lines 242--243
+[4]
+Underfull \hbox (badness 1694) in paragraph at lines 277--278
 []\OT1/ptm/m/n/10 Initial eval-u-a-tions of the As-ter-o-seis-mol-ogy frame-work
  []
 
-[4]
 
-LaTeX Warning: Reference `fig:roc_curve' on page 5 undefined on input line 246.
+LaTeX Warning: Reference `fig:roc_curve' on page 5 undefined on input line 281.
 
 
-LaTeX Warning: Citation `favPaper' on page 5 undefined on input line 283.
+LaTeX Warning: Citation `favPaper' on page 5 undefined on input line 318.
 
 [5]
 
-LaTeX Warning: Citation `b22' on page 6 undefined on input line 298.
+LaTeX Warning: Citation `b22' on page 6 undefined on input line 333.
 
+[6]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -370,7 +368,9 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[6] (paper.aux)
+[7
+
+] (paper.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -381,17 +381,17 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 4217 strings out of 474485
- 65587 string characters out of 5753549
- 1943542 words of memory out of 5000000
- 26466 multiletter control sequences out of 15000+600000
+ 4222 strings out of 474485
+ 65660 string characters out of 5753549
+ 1945542 words of memory out of 5000000
+ 26471 multiletter control sequences out of 15000+600000
  597309 words of font info for 109 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,9n,65p,992b,276s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (6 pages, 130219 bytes).
+Output written on paper.pdf (7 pages, 133615 bytes).
 PDF statistics:
- 62 PDF objects out of 1000 (max. 8388607)
+ 67 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

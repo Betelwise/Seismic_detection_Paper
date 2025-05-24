@@ -150,10 +150,45 @@
         occurrence times, showcasing an approach independent of waveform data for initial source region estimation.
 
     \subsection{ Martian Seismology}
-    Mars has been the focus of renewed seismic interest. The first attempt to place a seismometer on Mars was with the
-    Viking landers in 1976. The Viking 2 lander's seismometer, mounted on the lander deck, provided data primarily on
-    wind-induced lander vibrations, and only one candidate seismic event was tentatively identified (Anderson et al.,
-    1977; Lognonné, 2005). The on-deck deployment and instrument sensitivity were major limitations.
+        Mars has been the focus of renewed seismic interest. The first attempt to place a seismometer on Mars was with
+        the Viking landers in 1976. The Viking 2 lander's seismometer, mounted on the lander deck, provided data
+        primarily on wind-induced lander vibrations, and only one candidate seismic event was tentatively identified
+        \cite{Anderson1977,Lognonne2005}. The on-deck deployment and instrument sensitivity were major limitations.
+
+        Decades later, the NASA InSight mission, which landed in 2018, successfully deployed the SEIS (Seismic
+        Experiment for Interior Structure) instrument directly onto the Martian surface \cite{Lognonne2019, Banerdt2020}. 
+        %(Lognonné et al., 2019; Banerdt et al., 2020) 
+        SEIS comprises a suite of highly sensitive three-component Very Broad Band (VBB) and three-component Short
+        Period (SP) seismometers. InSight has definitively recorded hundreds of marsquakes, confirming Mars as a
+        seismically active planet \cite{Giardini2020,Clinton2021}. Martian seismic signals, like lunar ones, can be
+        influenced by near-surface scattering, though generally less intense than on the Moon. The Marsquake Service
+        (MQS) is responsible for ongoing event detection and cataloging, employing a combination of traditional and
+        evolving ML-assisted techniques \cite{Clinton2021}.
+
+        %TODO add a section on only CNNs ================================================================
+
+    \subsection{ Machine Learning Paradigms in Seismology }
+        The increasing volume and complexity of seismic data from both terrestrial and planetary missions have spurred the
+        adoption of machine learning techniques across various seismological tasks. Deep learning, in particular CNNs and
+        Recurrent Neural Networks (RNNs), has shown remarkable success in earthquake detection, phase picking, seismic
+        imaging, and source characterization on Earth \cite{MousaviBeroza2022}.
+        %(Mousavi and Beroza, 2022; Mousavi et al., 2020 - "Earthquake Transformer").
+
+        CNNs are adept at automatically learning hierarchical features from data, making them suitable for analyzing raw
+        seismic waveforms or their time-frequency representations (e.g., spectrograms) (Perol et al., 2018; Ross et al.,
+        2018b). Generative Adversarial Networks (GANs) have also been explored, for instance, by Li et al. (2018) who
+        used a GAN critic as an automatic feature extractor combined with a Random Forest classifier for discriminating
+        earthquake P-waves from noise in early warning systems. This highlights the potential of ML to not only classify
+        but also to learn compact and effective representations of seismic waves.
+
+\section{Framework}
+    %Overview
+    Overview
+    \subsection{Datasets and Input Seismogram Preparation}
+    hello
+        \subsubsection{Data Sources (Lunar and Martian)}
+            hello
+    
 
 
 \section{Related Work}
@@ -317,7 +352,11 @@ The authors would like to thank the NASA Planetary Data System (PDS) for providi
     \bibitem{Dainty1981} A. Dainty and M. Toksöz, ``Seismic codas on the Earth and the Moon: A comparison,'' \emph{Phys. Earth Planet. Inter.}, vol. 26, no. 4, pp. 250--260, 1981.
     \bibitem{Garcia2019} R. F. Garcia, A. Khan, M. Drilleau, et al., ``Lunar seismology: An update on interior structure models,'' \emph{Space Sci. Rev.}, vol. 215, no. 50, pp. 1--50, 2019.
     \bibitem{Weber2011} R. C. Weber, P. Y. Lin, E. J. Garnero, Q. Williams, and P. Lognonné, ``Seismic detection of the lunar core,'' \emph{Science}, vol. 331, no. 6015, pp. 309--312, Jan. 2011.
-    % \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73. 
+    \bibitem{Anderson1977} D. L. Anderson, W. F. Miller, G. V. Latham, Y. Nakamura, M. N. Toksöz, A. M. Dainty, F. K. Duennebier, A. R. Lazarewicz, R. L. Kovach, and T. C. D. Knight, ``Seismology on Mars,'' \emph{J. Geophys. Res.}, vol. 82, no. 28, pp. 4524--4546, 1977.
+    \bibitem{Banerdt2020} W. B. Banerdt et al., ``Initial results from the InSight mission on Mars,'' \emph{Nature Geoscience}, vol. 13, pp. 183--189, Mar. 2020.
+    \bibitem{Giardini2020} D. Giardini et al., ``The seismicity of Mars,'' \emph{Nature Geoscience}, vol. 13, pp. 205--212, 2020.
+    \bibitem{Clinton2021} J. F. Clinton et al., ``The Marsquake catalogue from InSight, sols 0--478,'' \emph{Phys. Earth Planet. Inter.}, vol. 310, Art. no. 106595, 2021
+    \bibitem{MousaviBeroza2022} S. M. Mousavi and G. C. Beroza, ``Deep-learning seismology,'' \emph{Science}, vol. 377, no. 6606, p. eabm4470, Aug. 2022, doi: 10.1126/science.abm4470.   % \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73. 
     % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
     % \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished. 
     % \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press. 
@@ -325,7 +364,6 @@ The authors would like to thank the NASA Planetary Data System (PDS) for providi
     % \bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
     % \bibitem{b8} S. C. Solomon et al., ``New perspectives on ancient Mars,'' \emph{Science}, vol. 307, no. 5713, pp. 1214--1220, Feb. 2005.
     % \bibitem{b9} P. Lognonné, ``Planetary seismology,'' \emph{Annu. Rev. Earth Planet. Sci.}, vol. 33, pp. 571--604, May 2005.
-    % \bibitem{b10} W. B. Banerdt et al., ``Initial results from the InSight mission on Mars,'' \emph{Nature Geoscience}, vol. 13, pp. 183--189, Mar. 2020.
     % \bibitem{b12} P. Lognonné et al., ``SEIS: Insight’s seismic experiment for internal structure of Mars,'' \emph{Space Sci. Rev.}, vol. 215, no. 12, Feb. 2019.
     % \bibitem{b13} R. D. Lorenz, ``Energy cost of acquiring and transmitting science data on deep-space missions,'' \emph{J. Spacecr. Rockets}, vol. 52, no. 6, pp. 1693--1697, Nov. 2015.
     % \bibitem{b14} R. Allen, ``Automatic earthquake recognition and timing from single traces,'' \emph{Bull. Seismol. Soc. Am.}, vol. 68, no. 5, pp. 1521--1532, Oct. 1978.
