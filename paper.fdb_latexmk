@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1748014547.10856 "e:/Projects_dont_move/Projects_Pending/Seismic_detection_Paper/paper.tex" "paper.pdf" "paper" 1748014548.1232 0
+["pdflatex"] 1748079837.15424 "e:/Projects_dont_move/Projects_Pending/Seismic_detection_Paper/paper.tex" "paper.pdf" "paper" 1748079838.49311 0
   "C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
   "C:/Program Files/MiKTeX/fonts/tfm/adobe/times/ptmb7t.tfm" 1136754254 2172 fd0c924230362ff848a33632ed45dc23 ""
   "C:/Program Files/MiKTeX/fonts/tfm/adobe/times/ptmb8r.tfm" 1136754254 4524 6bce29db5bc272ba5f332261583fee9c ""
@@ -67,9 +67,9 @@
   "C:/Program Files/MiKTeX/tex/latex/xcolor/xcolor.sty" 1700127522 55487 80a65caedd3722f4c20a14a69e785d8f ""
   "C:/Users/chali/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1748014533 82507 a9eef8696c92627b87e9975edea03b2a ""
   "C:/Users/chali/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1748014544 24215272 a35a2d81153f107274f54fcaa218f7ab ""
-  "e:/Projects_dont_move/Projects_Pending/Seismic_detection_Paper/paper.tex" 1748014526 34469 81e1aa7d55bba6a93977c91ca4d9fca2 ""
-  "paper.aux" 1748014547 3377 ecd391279e816c2195b04dc867189e74 "pdflatex"
-  "paper.tex" 1748014526 34469 81e1aa7d55bba6a93977c91ca4d9fca2 ""
+  "e:/Projects_dont_move/Projects_Pending/Seismic_detection_Paper/paper.tex" 1748079836 34544 75388c92630364d15b1e98466a453b06 ""
+  "paper.aux" 1748079838 3407 4cbac21429beac11b24ca0c4517f9c5b "pdflatex"
+  "paper.tex" 1748079836 34544 75388c92630364d15b1e98466a453b06 ""
   (generated)
   "paper.aux"
   "paper.log"

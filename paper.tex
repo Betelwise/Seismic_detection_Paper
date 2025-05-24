@@ -75,11 +75,31 @@ this continuous stream of seismic data back to Earth is a formidable challenge d
 severe constraints on bandwidth, power, and data volume inherent in deep-space missions 
 \cite{b13}.
 
-Traditional seismic event detection algorithms, often relying on methods like the Short-Term Average to Long-Term Average (STA/LTA) ratio \cite{b14}, are computationally inexpensive but tend to produce a high number of false positives, especially in noisy extra-terrestrial environments \cite{b15}. This inefficiency leads to the transmission of large volumes of non-pertinent data, consuming precious mission resources. Consequently, there is a critical need for robust, efficient, and autonomous onboard systems capable of accurately identifying true seismic events and prioritizing data for telemetry.
+Traditional seismic event detection algorithms, often relying on methods like the Short-Term Average 
+to Long-Term Average (STA/LTA) ratio \cite{b14}, are computationally inexpensive but tend to produce 
+a high number of false positives, especially in noisy extra-terrestrial environments \cite{b15}. This 
+inefficiency leads to the transmission of large volumes of non-pertinent data, consuming precious mission 
+resources. Consequently, there is a critical need for robust, efficient, and autonomous onboard systems 
+capable of accurately identifying true seismic events and prioritizing data for telemetry.
 
-Machine learning (ML), particularly deep learning techniques like Convolutional Neural Networks (CNNs), has emerged as a powerful tool for analyzing complex patterns in geophysical data \cite{b16, b17}. In planetary seismology, CNNs have shown promise for tasks such as detecting moonquakes from Apollo data. For instance, Civilini et al. (2021) demonstrated the use of CNNs trained on spectrograms of Earth-based seismic events, employing transfer learning to successfully identify moonquakes in the Apollo PSE and LSPE datasets \cite{b1}. Their work highlighted the potential of ML to overcome the limitations of local data scarcity by leveraging non-local training sets.
+Machine learning (ML), particularly deep learning techniques like Convolutional Neural Networks (CNNs), 
+has emerged as a powerful tool for analyzing complex patterns in geophysical data \cite{b16, b17}. In 
+planetary seismology, CNNs have shown promise for tasks such as detecting moonquakes from Apollo data. 
+For instance, Civilini et al. (2021) demonstrated the use of CNNs trained on spectrograms of Earth-based 
+seismic events, employing transfer learning to successfully identify moonquakes in the Apollo PSE and 
+LSPE datasets \cite{favPaper}. Their work highlighted the potential of ML to overcome the limitations of local 
+data scarcity by leveraging non-local training sets.
 
-Building upon these advancements, this paper introduces "Asteroseismology," a novel AI-driven framework designed for efficient and accurate seismic event detection on extra-terrestrial missions. Our approach uniquely integrates established classical seismic processing techniques with a lightweight CNN. This hybrid system aims to harness the interpretability and efficiency of conventional algorithms for initial event candidacy while leveraging the pattern recognition capabilities of CNNs for final, high-precision event verification. The Asteroseismology framework is designed for onboard implementation, emphasizing computational efficiency and adaptability to diverse planetary environments through tunable parameters. By processing data from both lunar (ALSEP) and Martian (InSight) missions, we demonstrate the system's potential to significantly reduce false positives, optimize data transmission, and enhance the scientific return of current and future planetary seismology missions.
+Building upon these advancements, this paper introduces "Asteroseismology," a novel AI-driven framework
+designed for efficient and accurate seismic event detection on extra-terrestrial missions. Our 
+approach uniquely integrates established classical seismic processing techniques with a lightweight CNN. 
+This hybrid system aims to harness the interpretability and efficiency of conventional algorithms for 
+initial event candidacy while leveraging the pattern recognition capabilities of CNNs for final,
+high-precision event verification. The Asteroseismology framework is designed for onboard implementation, 
+emphasizing computational efficiency and adaptability to diverse planetary environments through 
+tunable parameters. By processing data from both lunar (ALSEP) and Martian (InSight) missions, we 
+demonstrate the system's potential to significantly reduce false positives, optimize data transmission, 
+and enhance the scientific return of current and future planetary seismology missions.
 
 The main contributions of this paper are:
 \begin{itemize}
@@ -89,7 +109,11 @@ The main contributions of this paper are:
     \item Initial performance results indicating high detection accuracy with a low false positive rate, paving the way for autonomous onboard seismic analysis.
 \end{itemize}
 
-This paper is organized as follows: Section \ref{sec:related_work} reviews related work in seismic event detection and machine learning applications in seismology. Section \ref{sec:methodology} details the proposed Asteroseismology framework. Section \ref{sec:results_discussion} presents initial results and discusses their implications. Finally, Section \ref{sec:conclusion} concludes the paper and outlines future research directions.
+This paper is organized as follows: Section \ref{sec:related_work} reviews related work in seismic event 
+detection and machine learning applications in seismology. Section \ref{sec:methodology} details the 
+proposed Asteroseismology framework. Section \ref{sec:results_discussion} presents initial results and 
+discusses their implications. Finally, Section \ref{sec:conclusion} concludes the paper and outlines future
+research directions.
 
 \section{Related Work}
 \label{sec:related_work}
@@ -106,11 +130,11 @@ The advent of machine learning has opened new frontiers in seismic data analysis
 CNNs have been successfully applied to earthquake detection, phase picking, and magnitude estimation on Earth \cite{b17, b20}. Their ability to learn hierarchical features from time-series or time-frequency representations (like spectrograms) makes them well-suited for distinguishing subtle seismic signals from background noise.
 
 \subsection{Machine Learning in Planetary Seismology}
-The application of ML to planetary seismology is a more recent but rapidly growing field, driven by the unique challenges of these missions. The work by Civilini et al. (2021) \cite{b1} is a significant contribution in this area. They developed CNN models trained on spectrograms of seismic events from a single Earth station and successfully applied these, using transfer learning, to detect moonquakes in the Apollo Passive Seismic Experiment (PSE) and Lunar Seismic Profiling Experiment (LSPE) data. Their approach demonstrated the feasibility of using non-local training data and highlighted the potential for CNNs to catalog planetary seismicity even without prior local seismic data. They also introduced an "extra-arrival accuracy metric" to quantify performance on noisy lunar datasets.
+The application of ML to planetary seismology is a more recent but rapidly growing field, driven by the unique challenges of these missions. The work by Civilini et al. (2021) \cite{favPaper} is a significant contribution in this area. They developed CNN models trained on spectrograms of seismic events from a single Earth station and successfully applied these, using transfer learning, to detect moonquakes in the Apollo Passive Seismic Experiment (PSE) and Lunar Seismic Profiling Experiment (LSPE) data. Their approach demonstrated the feasibility of using non-local training data and highlighted the potential for CNNs to catalog planetary seismicity even without prior local seismic data. They also introduced an "extra-arrival accuracy metric" to quantify performance on noisy lunar datasets.
 
 Other studies have explored ML for analyzing data from the InSight mission to Mars, focusing on tasks like marsquake detection and noise characterization \cite{b21}. The noisy operational environment of landers, combined with the diverse and often weak seismic signals, makes robust event detection particularly challenging and an ideal candidate for ML-driven solutions.
 
-Our Asteroseismology framework builds upon these foundations. It acknowledges the strengths of conventional algorithms like STA/LTA for initial, computationally cheap candidate generation, similar to some multi-stage earthquake detection systems on Earth. However, it significantly differs from approaches like Civilini et al. \cite{b1} by using a hybrid pipeline that feeds 1D waveform segments and engineered auxiliary features directly to the CNN, rather than relying solely on spectrograms. This aims to retain fine temporal details and leverage interpretable features, potentially enhancing both efficiency and robustness for onboard processing.
+Our Asteroseismology framework builds upon these foundations. It acknowledges the strengths of conventional algorithms like STA/LTA for initial, computationally cheap candidate generation, similar to some multi-stage earthquake detection systems on Earth. However, it significantly differs from approaches like Civilini et al. \cite{favPaper} by using a hybrid pipeline that feeds 1D waveform segments and engineered auxiliary features directly to the CNN, rather than relying solely on spectrograms. This aims to retain fine temporal details and leverage interpretable features, potentially enhancing both efficiency and robustness for onboard processing.
 
 \section{The Asteroseismology Framework}
 \label{sec:methodology}
@@ -215,7 +239,7 @@ The six tunable parameters within the framework allow for significant adaptation
 \subsection{Discussion}
 The preliminary results suggest that the Asteroseismology framework offers a compelling solution for autonomous seismic event detection in space missions. The hybrid approach appears to strike an effective balance: the conventional algorithms provide a computationally cheap first pass that significantly reduces the data volume and false alarm rate for the CNN, while the CNN provides the sophisticated pattern recognition needed to distinguish true, often subtle, seismic events from complex noise.
 
-Compared to purely conventional methods, Asteroseismology offers substantially lower false positive rates. When compared to ML approaches like that of Civilini et al. \cite{b1}, which primarily used spectrograms as CNN input, our use of 1D waveforms combined with auxiliary statistical features offers a different pathway for feature extraction. While a direct quantitative comparison is complex without reimplementing their specific model on our exact data splits, our approach aims to preserve fine temporal details in the waveform and provide explicit, interpretable auxiliary features to the CNN, which could be advantageous for certain event types or computational constraints. The processing of data from both lunar (ALSEP) and Martian (InSight) missions in our training and testing pipeline also demonstrates a broader applicability than studies focused solely on one body.
+Compared to purely conventional methods, Asteroseismology offers substantially lower false positive rates. When compared to ML approaches like that of Civilini et al. \cite{favPaper}, which primarily used spectrograms as CNN input, our use of 1D waveforms combined with auxiliary statistical features offers a different pathway for feature extraction. While a direct quantitative comparison is complex without reimplementing their specific model on our exact data splits, our approach aims to preserve fine temporal details in the waveform and provide explicit, interpretable auxiliary features to the CNN, which could be advantageous for certain event types or computational constraints. The processing of data from both lunar (ALSEP) and Martian (InSight) missions in our training and testing pipeline also demonstrates a broader applicability than studies focused solely on one body.
 
 The current accuracy of $>$80\% with limited training is encouraging. Further expansion of the training dataset, including more diverse event types and noise conditions, along with more sophisticated data augmentation, is expected to further improve this performance. The planned integration with an AC-GAN framework (discussed in Future Work) is also anticipated to boost robustness.
 
@@ -242,7 +266,7 @@ In conclusion, the Asteroseismology framework represents a significant step towa
 The authors would like to thank the NASA Planetary Data System (PDS) for providing access to the Apollo ALSEP and Mars InSight mission data. We also acknowledge the developers of open-source software packages used in this research, including [mention specific libraries like Obspy, TensorFlow/Keras, Scikit-learn if used].
 
 \begin{thebibliography}{00}
-\bibitem{b1} F. Civilini, R.C. Weber, Z. Jiang, D. Phillips, and W. David Pan, ``Detecting moonquakes using convolutional neural networks, a non-local training set, and transfer learning,'' \emph{Geophys. J. Int.}, vol. 225, no. 3, pp. 2120--2134, Mar. 2021.
+\bibitem{favPaper} F. Civilini, R.C. Weber, Z. Jiang, D. Phillips, and W. David Pan, ``Detecting moonquakes using convolutional neural networks, a non-local training set, and transfer learning,'' \emph{Geophys. J. Int.}, vol. 225, no. 3, pp. 2120--2134, Mar. 2021.
 \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73. 
 \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
 \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished. 
