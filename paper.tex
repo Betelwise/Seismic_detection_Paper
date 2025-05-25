@@ -158,7 +158,6 @@
 
         Decades later, the NASA InSight mission, which landed in 2018, successfully deployed the SEIS (Seismic
         Experiment for Interior Structure) instrument directly onto the Martian surface \cite{Lognonne2019, Banerdt2020}. 
-        %(Lognonné et al., 2019; Banerdt et al., 2020) 
         SEIS comprises a suite of highly sensitive three-component Very Broad Band (VBB) and three-component Short
         Period (SP) seismometers. InSight has definitively recorded hundreds of marsquakes, confirming Mars as a
         seismically active planet \cite{Giardini2020,Clinton2021}. Martian seismic signals, like lunar ones, can be
@@ -333,9 +332,9 @@ for planetary missions.
             points indicated, is shown in ``Fig.~\ref{fig:stalta_output}''.
             \begin{figure}[htbp]
                 \centerline{\includegraphics[width=0.9\columnwidth]{figures/fig4_stalta_detections.pdf}}
-                \caption{Output of the STA/LTA analysis. The top panel shows the filtered and normalized seismogram. 
-                The bottom panel displays the corresponding STA/LTA characteristic function, with red vertical 
-                lines indicating trigger-on times for detected candidate events.}
+                \caption{Output of the STA/LTA analysis. (a) shows the filtered and normalized seismogram. 
+                (b) displays the corresponding STA/LTA characteristic function, with red horizontal 
+                line indicating trigger-on threshold for detected candidate events.}
                 \label{fig:stalta_output}
             \end{figure}
 
@@ -543,17 +542,17 @@ for planetary missions.
 % and highlighted the potential for CNNs to catalog planetary seismicity even without prior local seismic data. They also
 % introduced an "extra-arrival accuracy metric" to quantify performance on noisy lunar datasets.
 
-Other studies have explored ML for analyzing data from the InSight mission to Mars, focusing on tasks like marsquake
-detection and noise characterization \cite{b21}. The noisy operational environment of landers, combined with the diverse
-and often weak seismic signals, makes robust event detection particularly challenging and an ideal candidate for
-ML-driven solutions.
+% Other studies have explored ML for analyzing data from the InSight mission to Mars, focusing on tasks like marsquake
+% detection and noise characterization \cite{b21}. The noisy operational environment of landers, combined with the diverse
+% and often weak seismic signals, makes robust event detection particularly challenging and an ideal candidate for
+% ML-driven solutions.
 
-Our Asteroseismology framework builds upon these foundations. It acknowledges the strengths of conventional algorithms
-like STA/LTA for initial, computationally cheap candidate generation, similar to some multi-stage earthquake detection
-systems on Earth. However, it significantly differs from approaches like Civilini et al. \cite{favPaper} by using a
-hybrid pipeline that feeds 1D waveform segments and engineered auxiliary features directly to the CNN, rather than
-relying solely on spectrograms. This aims to retain fine temporal details and leverage interpretable features,
-potentially enhancing both efficiency and robustness for onboard processing.
+% Our Asteroseismology framework builds upon these foundations. It acknowledges the strengths of conventional algorithms
+% like STA/LTA for initial, computationally cheap candidate generation, similar to some multi-stage earthquake detection
+% systems on Earth. However, it significantly differs from approaches like Civilini et al. \cite{favPaper} by using a
+% hybrid pipeline that feeds 1D waveform segments and engineered auxiliary features directly to the CNN, rather than
+% relying solely on spectrograms. This aims to retain fine temporal details and leverage interpretable features,
+% potentially enhancing both efficiency and robustness for onboard processing.
 
 
 
@@ -636,10 +635,10 @@ potentially enhancing both efficiency and robustness for onboard processing.
 % celestial bodies in our solar system.
 \section{Conclusion and Future Work}
 This paper has presented Asteroseismology, an AI-driven hybrid framework designed for efficient seismic event detection
-on extra-terrestrial missions. Our system combines classical seismic processing with a lightweight Convolutional Neural
+on extra-terrestrial missions. Our system combines classical seismic processing with a Convolutional Neural
 Network (CNN) and demonstrates strong potential for autonomous, onboard data analysis. The framework's rapid processing
 capability (a month of data in under 60 seconds), adaptability through tunable parameters, and initial detection
-accuracy exceeding 80\% with a false positive rate around 5%, highlight its suitability for optimizing data telemetry
+accuracy exceeding 80\% with a false positive rate around 5\%, highlight its suitability for optimizing data telemetry
 from missions to the Moon, Mars, and potentially other planetary bodies.
 
 By successfully processing data from both the Apollo ALSEP and Mars InSight missions, Asteroseismology shows versatility
@@ -648,33 +647,46 @@ for quicker scientific insights and more effective use of limited deep-space com
 
 To further enhance the Asteroseismology framework, future efforts can be directed towards several key areas:
 \begin{enumerate}
-\item \textit{Advanced CNN Development and Training Data Expansion:} Future iterations will explore more sophisticated
+\item \textit{Advanced CNN Development and Training Data Expansion:} Future iterations can explore more sophisticated
 CNN architectures. Expanding the training dataset with a greater variety of seismic event types and noise profiles,
 along with advanced data augmentation techniques, will be crucial for improving the model's generalization and
 robustness across different planetary conditions.
 \item \textit{Generative Adversarial Networks (GANs) for Data Augmentation and Feature Learning:} Inspired by
-applications in terrestrial seismology where GANs have been used for tasks like seismic wave discrimination (e.g., \cite{Li2018} who used a GAN critic as a feature extractor), we plan to investigate the use of GANs, potentially AC-GANs
+applications in terrestrial seismology where GANs have been used for tasks like seismic wave discrimination (e.g.,
+\cite{Li2018} who used a GAN critic as a feature extractor), we can investigate the use of GANs, potentially AC-GANs
 \cite{Odena2017}, to generate realistic synthetic planetary seismic data. This could be particularly beneficial for
 augmenting training sets with rare event types and improving the classifier's ability to distinguish subtle event
 characteristics.
 \item \textit{Physics-Informed Neural Networks (PINNs) and Enhanced Auxiliary Features:} We will investigate the
 inclusion of a richer set of auxiliary features for the CNN, derived from more detailed physical analysis of candidate
 event waveforms. Furthermore, exploring Physics-Informed Neural Networks (PINNs), which are gaining momentum in
-seismology (Mousavi and Beroza, 2022), could allow for the incorporation of known physical constraints directly into the
+seismology \cite{Mousavi2022}, could allow for the incorporation of known physical constraints directly into the
 ML model, potentially leading to more robust and interpretable event detection.
 \item \textit{Onboard Implementation and Prototyping:} A critical next step is to prototype and rigorously evaluate the
-Asteroseismology system on hardware representative of spacecraft processors (e.g., FPGAs or radiation-hardened CPUs) to
+system on hardware representative of spacecraft processors (e.g., FPGAs or radiation-hardened CPUs) to
 assess its performance under realistic mission resource constraints.
 \item \textit{Adaptation to Other Celestial Bodies:} The framework's adaptable design makes it a promising candidate for
 future missions to other seismically active bodies, such as Europa or Titan. This would involve tuning parameters and
 retraining the CNN with appropriate simulated or acquired data specific to those environments.
 \end{enumerate}
-In conclusion, the Asteroseismology framework offers a significant advancement towards more autonomous and scientifically productive planetary seismology missions. By enabling intelligent data management at the source, it helps overcome critical mission constraints, paving the way for deeper exploration and understanding of the internal structures of celestial bodies within our solar system.
+In conclusion, the framework offers an advancement towards more autonomous and scientifically productive planetary
+seismology missions. By enabling intelligent data management at the source, it helps overcome critical mission
+constraints, paving the way for deeper exploration and understanding of the internal structures of celestial bodies
+within our solar system.
 
 \section*{Acknowledgment}
-The authors would like to thank the NASA Planetary Data System (PDS) for providing access to the Apollo ALSEP and Mars
-InSight mission data. We also acknowledge the developers of open-source software packages used in this research,
-including.%TODO; acknolees
+The authors would like to express their sincere gratitude to the NASA Planetary Data System (PDS), including its
+Geosciences Node and the IRIS Data Management Center (IRIS-DMC), for providing public access to the invaluable seismic
+data from the Apollo Lunar Surface Experiments Package (ALSEP) missions. We also thank NASA, CNES, and all international
+partners of the Mars InSight mission for making the SEIS instrument data available through the PDS and services like
+IRIS-DMC. These open data policies are fundamental to advancing planetary seismology. We also acknowledge the crucial
+contributions of the open-source software community. This research made extensive use of several packages, including:
+\begin{itemize}
+\item \textit{Obspy} \cite{Beyreuther2010} for seismic data processing and analysis;
+\item \textit{Keras} \cite{Chollet2021} with \textit{TensorFlow} \cite{Abadi2016} as its backend for developing and
+training the Convolutional Neural Network;
+\end{itemize}
+The availability of these powerful tools significantly accelerates research and development in this field.
 
 \begin{thebibliography}{00}
     \bibitem{Civilini2021} F. Civilini, R.C. Weber, Z. Jiang, D. Phillips, and W. David Pan, ``Detecting moonquakes using convolutional neural networks, a non-local training set, and transfer learning,'' \emph{Geophys. J. Int.}, vol. 225, no. 3, pp. 2120--2134, Mar. 2021.
@@ -696,7 +708,9 @@ including.%TODO; acknolees
     \bibitem{Chollet2021} F. Chollet, "Deep Learning with Python," Simon and Schuster, 2021.
     \bibitem{Kingma2014} D. P. Kingma and J. Ba, "Adam: A method for stochastic optimization," arXiv preprint arXiv:1412.6980, 2014.
     \bibitem{Li2018} Z. Li, M.-A. Meier, E. Hauksson, Z. Zhan, and J. Andrews, "Machine learning seismic wave discrimination: Application to earthquake early warning," \emph{Geophysical Research Letters}, vol. 45, pp. 4773–4779, 2018.
-    % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
+    \bibitem{Odena2017} A. Odena, C. Olah, and J. Shlens, ``Conditional image synthesis with auxiliary classifier GANs,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2017, pp. 2642--2651.
+    \bibitem{Mousavi2022} S. M. Mousavi and G. C. Beroza, ``Deep-learning seismology,'' \emph{Science}, vol. 377, no. 6607, p. eabm4470, Aug. 2022.   % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
+    \bibitem{Abadi2016} M. Abadi et al., "TensorFlow: A System for Large-Scale Machine Learning," in Proc. 12th USENIX Symp. Operating Syst. Design Implementation (OSDI), 2016, pp. 265--283.
     % \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished. 
     % \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press. 
     % \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982]. 
@@ -713,7 +727,6 @@ including.%TODO; acknolees
     % \bibitem{b19} S. Mostafa, M. R. Zare, and S. M. J. Aleali, ``Seismic signal classification using support vector machine and particle swarm optimization,'' \emph{J. Seismol.}, vol. 19, pp. 619--630, 2015.
     % \bibitem{b20} W. J. N. R. Mousavi, S. M., Horton, S. P., et al., ``CRED: A deep residual network of convolutional and recurrent units for earthquake signal detection,'' \emph{Sci. Rep.}, vol. 9, no. 1, p. 10267, Jul. 2019.
     % \bibitem{b21} C. Clinton et al., ``The Marsquake catalogue from InSight, S01 to S08,'' \emph{Phys. Earth Planet. Inter.}, vol. 310, p. 106595, Jan. 2021.
-    % \bibitem{b22} A. Odena, C. Olah, and J. Shlens, ``Conditional image synthesis with auxiliary classifier GANs,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2017, pp. 2642--2651.
     % \bibitem{b26} F. Baer, M., \& Kradolfer, U. (1987). An automatic phase picker for local and teleseismic events. \emph{Bulletin of the Seismological Society of America}, 77(4), 1437-1445.
 
 
