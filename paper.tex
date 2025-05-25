@@ -15,39 +15,42 @@
 \title{Asteroseismology: AI-Driven Seismic Event Detection for Extra-Terrestrial Missions\\
 }
 
-\author{\IEEEauthorblockN{Muhammad Zain Ali}
-    \IEEEauthorblockA{\textit{Dept. of Physics} \\
-        \textit{Quaid-i-Azam University}\\
-        Islamabad, Pakistan \\
-        zain@betelwise.com}
-    \and
-    \IEEEauthorblockN{Khabab Nazir}
-    \IEEEauthorblockA{\textit{Dept. of Physics} \\
-        \textit{Quaid-i-Azam University}\\
-        Islamabad, Pakistan \\
-        khababnazir10@gmail.com}
-}
+% \author{\IEEEauthorblockN{Muhammad Zain Ali}
+%     \IEEEauthorblockA{\textit{Dept. of Physics} \\
+%         \textit{Quaid-i-Azam University}\\
+%         Islamabad, Pakistan \\
+%         zain@betelwise.com}
+%     \and
+%     \IEEEauthorblockN{Khabab Nazir}
+%     \IEEEauthorblockA{\textit{Dept. of Physics} \\
+%         \textit{Quaid-i-Azam University}\\
+%         Islamabad, Pakistan \\
+%         khababnazir10@gmail.com}
+% }
 
 \maketitle
 
 \begin{abstract}
-    Planetary seismology faces significant challenges in transmitting continuous seismic data due to bandwidth and power
-    constraints. Traditional event detection methods generate numerous false positives, leading to inefficient data
-    transmission. This paper presents Asteroseismology, an AI-enhanced seismic event detection framework that integrates
-    classical phase-picking algorithms with machine learning to optimize seismic data processing for space missions. The
-    workflow begins with automatic bandpass filtering, outlier removal, and normalization to enhance signal clarity. A
-    Short-Term Average to Long-Term Average (STA/LTA) analysis is then applied to detect candidate events, followed by a
-    filtering mechanism that refines initial picks based on characteristic function slopes. The final step employs a
-    Convolutional Neural Network (CNN), trained on seismic data from the Apollo Lunar Surface Experiments Package
-    (ALSEP) and NASA’s Mars InSight mission, to distinguish true seismic events from noise, ensuring high precision
-    while minimizing false detections. Designed for computational efficiency, the system processes a month’s worth of
-    seismic data in under 60 seconds on an average processor. It also features six tunable parameters, allowing
-    adaptation to different planetary environments and mission constraints. Initial results demonstrate that the CNN,
-    despite limited training, achieves over 80 percent event detection accuracy with a false positive rate of
-    approximately 5 percent. Future enhancements include refining the CNN within an Auxiliary Classifier Conditional GAN
-    (AC-GAN) framework to further improve detection reliability. This AI-driven approach enables autonomous seismic data
-    analysis onboard spacecraft, significantly reducing the need for raw data transmission and paving the way for more
-    efficient planetary and lunar seismology missions.
+Planetary seismology is crucial for understanding the internal structure and evolution of celestial bodies, but missions
+face severe data transmission limitations due to bandwidth and power constraints. Traditional onboard event detection
+methods often struggle with high false positive rates, leading to inefficient use of these limited resources. This paper
+introduces "Asteroseismology," an AI-enhanced hybrid framework designed to optimize seismic event detection for space
+missions. The framework first employs an Initial Processing and Candidate Selection (IPCS) stage, which utilizes
+conventional seismic algorithms. This includes adaptive bandpass filtering based on signal characteristics (power
+spectrum or standard deviation), outlier removal, normalization, and STA/LTA analysis for initial event triggering. A
+key refinement within this stage involves analyzing characteristic function slopes to reduce false STA/LTA detections.
+Candidate events from the IPCS stage are then passed to a Machine Learning-based Event Verification (MLEV) stage. Unlike
+approaches that primarily use 2D spectrograms, our MLEV stage utilizes 1D seismogram segments augmented with explicitly
+engineered auxiliary statistical features (standard deviations around the arrival time) as input to a lightweight
+Convolutional Neural Network (CNN). This CNN, trained on a combined dataset of seismic events and noise from both the
+Apollo ALSEP (lunar) and NASA Mars InSight (Martian) missions, performs the final classification of true seismic events
+versus noise. The Asteroseismology system is designed for computational efficiency, processing a month of seismic data
+in under 60 seconds on an average processor, and features tunable parameters for adaptation to diverse planetary
+environments. Preliminary results indicate that the CNN achieves over 80\% event detection accuracy with a false positive
+rate around 5\%. Future work includes exploring advanced ML architectures like GANs for data augmentation and
+physics-informed neural networks for enhanced robustness. This AI-driven hybrid approach offers a significant step
+towards enabling autonomous, efficient, and accurate seismic data analysis onboard spacecraft, thereby maximizing the
+scientific return from planetary seismology missions.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -65,19 +68,19 @@
 
     A fundamental challenge in planetary seismology is the efficient management and transmission of the vast quantities
     of continuous seismic data generated by lander-based instruments. Deep-space missions operate under severe
-    constraints on power, bandwidth, and data volume (Lorenz, 2015, as cited in Civilini et al., 2021; Lognonné et al.,
-    2019). For instance, the SEIS instrument on the Mars InSight mission, while typically downlinking continuous data at
-    2 samples per second (sps), generates a significant data volume; \cite{Lognonne2019} note that its full data
-    generation capability is orders of magnitude larger than its telemetry allocation. \cite{Civilini2021} quantified
-    that the telemetry for SEIS consumes approximately 1.5\% of the InSight lander's total power output. If we were to
-    consider data rates comparable to those from some Apollo experiments, which utilized sampling rates such as 6.625 Hz
-    for the Passive Seismic Experiment (PSE) mid-period instruments \cite{Nunn2020}, the data volume and consequently
-    the power required for transmission by a modern system like SEIS would consume an even more substantial portion of a
-    lander's available power. Extrapolating further, \cite{Civilini2021} projected that a similar seismic setup for a
-    mission to Europa could demand 8.8–13.2\% of the lander's power solely for seismic data transmission. These figures
-    underscore the critical necessity for sophisticated on-board data processing and event detection algorithms to
-    prioritize scientifically valuable data segments for downlink, thereby making the most efficient use of limited
-    mission resources.
+    constraints on power, bandwidth, and data volume  (Lorenz, 2015, as cited by \cite{Civilini2021};
+    \cite{Lognonne2019}). For instance, the SEIS instrument on the Mars InSight mission, while typically downlinking
+    continuous data at 2 samples per second (sps), generates a significant data volume; \cite{Lognonne2019} note that
+    its full data generation capability is orders of magnitude larger than its telemetry allocation. \cite{Civilini2021}
+    quantified that the telemetry for SEIS consumes approximately 1.5\% of the InSight lander's total power output. If
+    we were to consider data rates comparable to those from some Apollo experiments, which utilized sampling rates such
+    as 6.625 Hz for the Passive Seismic Experiment (PSE) mid-period instruments \cite{Nunn2020}, the data volume and
+    consequently the power required for transmission by a modern system like SEIS would consume an even more substantial
+    portion of a lander's available power. Extrapolating further, \cite{Civilini2021} projected that a similar seismic
+    setup for a mission to Europa could demand 8.8–13.2\% of the lander's power solely for seismic data transmission.
+    These figures underscore the critical necessity for sophisticated on-board data processing and event detection
+    algorithms to prioritize scientifically valuable data segments for downlink, thereby making the most efficient use
+    of limited mission resources.
 
     Traditional automatic event detection algorithms, like the Short-Term Average to Long-Term Average (STA/LTA) ratio
     (Allen, 1982, as cited in \cite{Civilini2021}), while computationally inexpensive, often struggle with the low
@@ -94,12 +97,11 @@
     datasets. This work underscored the potential of ML to generalize from available data and perform robust
     classification.
 
-    This paper introduces "Asteroseismology," an AI-enhanced seismic event detection framework specifically designed to
+    This paper introduces an AI-enhanced seismic event detection framework specifically designed to
     address the data optimization needs of extra-terrestrial missions. Our framework uniquely integrates a pipeline of
-    classical phase-picking algorithms with a lightweight CNN. This hybrid approach begins with conventional signal
+    classical phase-picking algorithms with a CNN. This hybrid approach begins with conventional signal
     conditioning, including automatic bandpass filtering, outlier removal, and normalization. Candidate seismic events
-    are then identified using STA/LTA analysis, followed by a novel filtering stage based on characteristic function
-    slopes to refine these initial picks. The core innovation lies in then feeding these refined candidate events,
+    are then identified using STA/LTA analysis. The core innovation lies in then feeding these refined candidate events,
     represented as 1D waveform segments augmented with auxiliary statistical features, into a CNN. This CNN, trained on
     a diverse dataset including lunar data from the Apollo missions and Martian data from the InSight mission, is tasked
     with the final discrimination between true seismic events and noise. By leveraging the efficiency of classical
@@ -291,8 +293,8 @@ for planetary missions.
             % TODO: tell that which example event it is
             \begin{figure}[htbp]
                 \centerline{\includegraphics[width=0.9\columnwidth]{figures/fig2_adaptive_bandpass.pdf}}
-                \caption{Comparison of a raw seismogram (top panel) with the same seismogram after the application 
-                of the adaptively selected bandpass filter (bottom panel). The filtering aims to enhance signal 
+                \caption{Comparison of a raw seismogram of an event from mars (a) with the same seismogram after the application 
+                of the adaptively selected bandpass filter (b). The filtering aims to enhance signal 
                 components within the optimal frequency range.}
                 \label{fig:adaptive_filtering_comparison} 
             \end{figure}
@@ -308,8 +310,8 @@ for planetary missions.
 
         \begin{figure}[htbp]
             \centerline{\includegraphics[width=0.9\columnwidth]{figures/fig3_mitigation.pdf}}
-            \caption{Effect of outlier mitigation. The top panel shows the seismogram after bandpass filtering, 
-            potentially containing high-amplitude outliers. The bottom panel displays the same seismogram after 
+            \caption{Effect of outlier mitigation. (a) shows the seismogram after bandpass filtering, 
+            potentially containing high-amplitude outliers. (b) displays the same seismogram after 
             the outlier clipping process, where extreme values have been attenuated.}
             \label{fig:outlier_clipping_comparison}
         \end{figure}
@@ -472,13 +474,13 @@ for planetary missions.
                 % \subsubsection{Waveform Segmentation and Initial Processing}
         \subsection{Performance Results}
         Initial evaluations of the framework demonstrate promising results. The CNN component, even with what is
-        currently considered limited training data and refinement, achieved a **detection accuracy of over 80\%** on the
+        currently considered limited training data and refinement, achieved a detection accuracy of over 80\% on the
         test set comprising both lunar and Martian seismic signals. This indicates the model's capability to generalize
         across different planetary environments and event characteristics.
         
         Crucially, the hybrid nature of the system, particularly the pre-filtering by conventional algorithms,
-        contributed to a **false positive rate of approximately 5\%**. This is a significant improvement over
-        traditional methods like standalone STA/LTA, which often suffer from much higher FPRs in noisy planetary
+        contributed to a false positive rate of approximately 5\%. This is a significant improvement over
+        traditional methods like standalone STA/LTA, which often suffer from much higher False Positive rate in noisy planetary
         settings. A low FPR is vital for minimizing the transmission of non-scientific data.
         
         % Table \ref{tab:performance_summary} (placeholder) would typically summarize these key performance indicators.
@@ -711,6 +713,7 @@ The availability of these powerful tools significantly accelerates research and 
     \bibitem{Odena2017} A. Odena, C. Olah, and J. Shlens, ``Conditional image synthesis with auxiliary classifier GANs,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2017, pp. 2642--2651.
     \bibitem{Mousavi2022} S. M. Mousavi and G. C. Beroza, ``Deep-learning seismology,'' \emph{Science}, vol. 377, no. 6607, p. eabm4470, Aug. 2022.   % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
     \bibitem{Abadi2016} M. Abadi et al., "TensorFlow: A System for Large-Scale Machine Learning," in Proc. 12th USENIX Symp. Operating Syst. Design Implementation (OSDI), 2016, pp. 265--283.
+    \bibitem{Lorenz2015} R. D. Lorenz, ``Energy cost of acquiring and transmitting science data on deep-space missions,'' \emph{J. Spacecr. Rockets}, vol. 52, no. 6, pp. 1693--1697, Nov. 2015, doi: 10.2514/1.A33298.
     % \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished. 
     % \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press. 
     % \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982]. 
