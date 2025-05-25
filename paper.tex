@@ -200,7 +200,8 @@ final classification, discerning true seismic events from the residual noise and
 conventional filtering. This hybrid architecture aims to optimize both computational efficiency and detection accuracy
 for planetary missions.
     
-    \subsection{Initial Processing and Candidate Events Selection(IPCS)}%TODO refine heading
+    \subsection{Initial Processing and Candidate Events Selection(IPCS)}
+    \label{sec:ipcs}
         The Initial Processing and Candidate Selection (IPCS) stage of the framework employs a series of conventional
         seismic signal processing techniques to enhance signal clarity, identify potential seismic events, and reduce
         the number of candidates passed to the subsequent machine learning stage. This stage operates on individual
@@ -211,8 +212,16 @@ for planetary missions.
             bandpass filtering approach is implemented. The system iteratively evaluates a series of predefined
             frequency ranges. For each range, defined by a starting frequency  and a fixed window size , a bandpass
             filter is applied to a copy of the original trace.
+
+            \begin{figure}[htbp]
+                \centerline{\includegraphics[width=0.9\columnwidth]{figures/fig1_raw_and_spectrogram.pdf}}
+                \caption{Example of a raw seismic waveform (top panel) and its corresponding time-frequency 
+                spectrogram (bottom panel). This visualization aids in understanding the initial signal 
+                characteristics before adaptive filtering.}
+                \label{fig:raw_spectrogram_example}
+            \end{figure}
             
-            The optimal frequency band is determined by one of two methods, selectable by the user:
+            The optimal frequency band is determined by one of two methods:
             
             \begin{enumerate}[label=\alph*), leftmargin=3em]
                 \item \textit{Power Spectrum Analysis:} The spectrogram of the filtered signal is computed.
@@ -227,6 +236,18 @@ for planetary missions.
                 (after normalization) might indicate a clearer, less noisy signal.
             \end{enumerate}
 
+            The effect of applying the selected adaptive bandpass filter is shown in ``Fig.~\ref{fig:adaptive_filtering_comparison}''
+            , which compares the raw seismogram with the seismogram after the optimal bandpass filter has been applied, 
+            enhancing the clarity of potential signals within the chosen frequency band.
+            % TODO: tell that which example event it is
+            \begin{figure}[htbp]
+                \centerline{\includegraphics[width=0.9\columnwidth]{figures/fig2_adaptive_bandpass.pdf}}
+                \caption{Comparison of a raw seismogram (top panel) with the same seismogram after the application 
+                of the adaptively selected bandpass filter (bottom panel). The filtering aims to enhance signal 
+                components within the optimal frequency range.}
+                \label{fig:adaptive_filtering_comparison} 
+            \end{figure}
+
         \subsubsection{Noise and Outlier Mitigation}
             Following the adaptive bandpass filtering, further steps are taken to mitigate noise. If resampling is
             configured , the filtered trace is resampled to a target frequency (e.g., 6.625Hz, reminiscent of Apollo-era
@@ -234,7 +255,15 @@ for planetary missions.
             Data points in the filtered trace whose absolute values exceed a multiple (e.g., 26 times) of the trace's
             standard deviation are considered outliers and are clipped to the standard deviation value. This step aims to
             reduce the impact of short, high-amplitude glitches that might otherwise distort normalization or trigger false
-            STA/LTA detections.
+            STA/LTA detections.``Fig.~\ref{fig:outlier_clipping_comparison}'' illustrates the effect of this outlier clipping process.
+
+        \begin{figure}[htbp]
+            \centerline{\includegraphics[width=0.9\columnwidth]{figures/fig3_mitigation.pdf}}
+            \caption{Effect of outlier mitigation. The top panel shows the seismogram after bandpass filtering, 
+            potentially containing high-amplitude outliers. The bottom panel displays the same seismogram after 
+            the outlier clipping process, where extreme values have been attenuated.}
+            \label{fig:outlier_clipping_comparison}
+        \end{figure}
 
         \subsubsection{Data Normalization}
             After outlier removal, the filtered trace data is normalized to a consistent amplitude range,
@@ -245,11 +274,20 @@ for planetary missions.
                 
         \subsubsection{STA\slash LTA Analysis for Initial Detection}
             Potential seismic event onsets are identified using the classic Short-Term Average to Long-Term Average
-            (STA/LTA) algorithm, as implemented in Obspy \cite{Beyreuther2010}. The algorithm is applied
-            to the absolute values of the normalized and filtered trace data. The lengths of the short-term window
-            and long-term window, as well as the trigger-on threshold and trigger-off threshold, are configurable parameters. The trigger-off threshold is dynamically set based on the average of the
-            characteristic function (CFT) generated by the STA/LTA algorithm. This results in a set of on-off time pairs,
-            marking the start and end times of candidate detections.
+            (STA/LTA) algorithm, as implemented in Obspy \cite{Beyreuther2010}. The algorithm is applied to the absolute
+            values of the normalized and filtered trace data. The lengths of the short-term window and long-term window,
+            as well as the trigger-on threshold and trigger-off threshold, are configurable parameters. The trigger-off
+            threshold is dynamically set based on the average of the characteristic function (CFT) generated by the
+            STA/LTA algorithm. This results in a set of on-off time pairs, marking the start and end times of candidate
+            detections.An example of the filtered seismogram alongside its STA/LTA characteristic function, with trigger
+            points indicated, is shown in ``Fig.~\ref{fig:stalta_output}''.
+            \begin{figure}[htbp]
+                \centerline{\includegraphics[width=0.9\columnwidth]{figures/fig4_stalta_detections.pdf}}
+                \caption{Output of the STA/LTA analysis. The top panel shows the filtered and normalized seismogram. 
+                The bottom panel displays the corresponding STA/LTA characteristic function, with red vertical 
+                lines indicating trigger-on times for detected candidate events.}
+                \label{fig:stalta_output}
+            \end{figure}
 
         % \subsubsection{Candidate Pick Refinement using Characteristic Function Analysis}
         %     Not all STA/LTA triggers correspond to genuine seismic events. The Asteroseismology framework incorporates a
@@ -269,39 +307,105 @@ for planetary missions.
         %     adapted part of your conventional pipeline and should be emphasized.)
             
     \subsection{Machine Learning Stage: CNN-based Event Refinement}
-
+        The Machine Learning-based Event Verification (MLEV) stage serves as the final arbiter in the Asteroseismology
+        framework. It utilizes a Convolutional Neural Network (CNN) to classify candidate events, which have been
+        pre-processed and selected by the Initial Processing and Candidate Selection (IPCS) stage (\ref{sec:ipcs}), as
+        either true seismic events or noise.
     \subsubsection{Input Feature Construction for the CNN}
-        (How candidate events from are prepared for the CNN.) 1D Seismogram Segments:
-        Length (e.g., 5565 samples), channels used. Auxiliary Features: Explicitly detail the "Standard deviation values
-        before and after the Arrival time." Justify why these features are chosen and what information they provide to
-        the network. (Highlighting point: Civilini et al. used 2D spectrograms. Your use of 1D waveforms + explicitly
-        engineered auxiliary features is a key methodological difference.)
-        
+        For each candidate event identified by the IPCS stage, a set of specific features is prepared to serve as input
+        to the CNN. This input is designed to capture both the temporal waveform characteristics and contextual
+        information surrounding the potential event. The CNN takes two distinct types of inputs:
+
+        \begin{enumerate}
+            \item \textit{1D Seismogram Segments:} A fixed-length segment of the 1D seismic waveform data, centered
+            around the conventionally picked arrival time, constitutes the primary input. In this study, these segments
+            have a shape of (5565, 1), representing 5565 time samples for a single seismic component (e.g., vertical).
+            This direct waveform input allows the CNN to learn relevant features from the time-series data itself.
+            \item \textit{Auxiliary Features:} To provide additional contextual information to the network, a set of
+            auxiliary features is concatenated with the processed seismogram features. These auxiliary inputs consist of
+            two values: the standard deviation of the seismic signal in a window immediately preceding the picked
+            arrival time, and the standard deviation in a window immediately following the picked arrival time. These
+            statistical measures aim to inform the CNN about the local noise characteristics and the signal's emergence
+            from the background noise. The auxiliary input thus has a shape of (2,).
+        \end{enumerate}
+        This dual-input approach, combining raw waveform data with engineered statistical features, distinguishes our
+        method from those relying solely on time-frequency representations like spectrograms. It is intended to preserve
+        fine temporal details crucial for seismic phase analysis while explicitly providing the CNN with interpretable
+        contextual information.
+
         \subsubsection{CNN Architecture}
-        (Describe your "lightweight" CNN: number and type of layers (convolutional, pooling, fully connected),
-        activation functions, filter sizes, strides, dropout, etc. Justify design choices if aiming for on-board
-        efficiency.)
+            The core of the MLEV stage is a lightweight CNN designed for binary classification (event vs. noise). The
+            architecture, implemented using Keras \cite{Chollet2021}, is structured to process the seismogram and
+            auxiliary inputs efficiently:
+        
+            \begin{enumerate}
+                \item \textit{Seismogram Processing Branch:} The 1D seismogram input (5565, 1) is processed through a
+                series of three convolutional blocks. Each block consists of a 1D Convolutional layer (Conv1D) with a
+                kernel size of 3 and 'relu' activation, followed by a MaxPooling1D layer (pool size 2) for down-sampling
+                and feature reduction, and a Dropout layer (rate 0.3) for regularization to prevent overfitting. The
+                number of filters in the convolutional layers increases progressively: 32, 64, and 128 for the first,
+                second, and third blocks, respectively. The output of the final convolutional block is flattened
+                (Flatten) to produce a 1D feature vector representing the seismogram.
+                
+                \item \textit{Auxiliary Input Branch:} The auxiliary input (shape (2,)) is directly used without further
+                convolutional processing in this branch.
+
+                \item \textit{Combined Model:} The flattened output from the seismogram processing branch and the
+                auxiliary input vector are concatenated (concatenate). This combined feature vector is then passed
+                through two fully connected (Dense) layers with 'relu' activation (64 units and 32 units, respectively),
+                each followed by a Dropout layer (rate 0.4) for further regularization. The final output layer is a
+                single Dense unit with a 'sigmoid' activation function, producing a probability score between 0 and 1
+                for binary classification.
+            \end{enumerate}
+        
+            The Adam optimizer \cite{Kingma2014} with a learning rate of 0.0002 is used for model compilation, and binary cross-entropy is employed as the loss function. Model performance is monitored using accuracy.
         
         \subsubsection{CNN Training and Validation}
-        (Training data labeling (event vs. noise, P/S arrivals if applicable). Loss function. Optimizer. Learning rate.
-        Batch size. Number of epochs. Validation strategy.) (Mention of using both lunar and Martian data for training,
-        which is distinct from single-source transfer learning.)
+            The CNN model is trained using curated datasets of seismic events and noise segments derived from both lunar
+            (ALSEP) and Martian (InSight) missions. These datasets are prepared by concatenating multiple *.npy files
+            containing the seismogram segments, corresponding auxiliary features, and binary labels (0 for noise, 1 for
+            event).
+        
+        During training, the model is fitted for a specified number of epochs (e.g., 30) with a defined batch size
+            (e.g., 32). A portion of the combined training data (e.g., 20\%) is held out for validation to monitor the
+            model's generalization performance and to prevent overfitting. To address potential class imbalance in the
+            training data (e.g., more noise samples than event samples), class weights (e.g., {0: 1.0, 1: 10}) are applied
+            during the training process. This gives higher importance to the minority class (true events), encouraging the
+            model to learn its features more effectively.
         
         \subsubsection{Event Classification and Output}
-        (How the CNN output (e.g., probability score) is used to make the final event/noise classification.
-        Thresholding.)
+            Once the CNN model is trained and saved, it can be loaded for inference on new, unseen data. For a given
+            candidate event (represented by its 1D seismogram segment and auxiliary features), the model predicts a
+            single output value between 0 and 1. This value represents the probability that the input corresponds to a
+            true seismic event. A predefined threshold (typically 0.5, but adjustable) is then applied to this
+            probability score to make the final binary classification: if the score exceeds the threshold, the candidate
+            is classified as a seismic event; otherwise, it is classified as noise.
         
         \subsection{Tunability and Adaptability of the Framework}
-        (Briefly reiterate the tunable parameters (e.g., the six mentioned in your abstract) and how they allow
-        adaptation to different planetary environments or mission constraints. This highlights practical
-        considerations.)
+            The framework is designed for adaptability across diverse planetary environments and mission objectives,
+            primarily through configurable parameters within its Initial Processing and Candidate Selection (IPCS)
+            stage. These tunable settings allow for optimized performance whether analyzing lunar or Martian seismic
+            data.
+            Key tunable parameters include:
+            \subsubsection{Adaptive Bandpass Filtering Controls}
+                low-freq-point, high-freq-point, and frequence-window define the spectral search space and the applied
+                filter width. For example, lunar data might utilize a lower frequency range (e.g., 0.2-1.0 Hz with a 0.2 Hz
+                window) compared to Martian data (e.g., 0.6-4.0 Hz with a 0.5 Hz window), reflecting differing dominant
+                signal frequencies and noise characteristics.
+            \subsubsection{STA/LTA Detection Thresholds and Windows}
+                STA and LTA length window lengths, and trigger threshold are adjusted to balance sensitivity with false
+                alarm rates. Longer windows might be preferred for emergent lunar events (e.g., STA 100s, LTA 1000s), while
+                shorter windows could suit sharper marsquakes (e.g., STA 20s, LTA 80s).
+            \subsubsection{resampling}
+                df-resample allows for a target resampling rate (e.g., 6.625 Hz) for standardization or computational efficiency.
+                clipping-std-factor (e.g., 26) controls outlier removal, robustly handling transient spikes.
         
         \subsection{Datasets and Input Seismogram Preparation}
             hello
             \subsubsection{Data Sources (Lunar and Martian)}
                 hello
                 \begin{enumerate}[label=\alph*), leftmargin=3em]
-                    \item \textit{Apollo ALSEP Data:} This dataset comprises seismic recordings from the Apollo Lunar
+                    \item \textit{Apollo ALSEP Data:} This dataset comprises seismic recordings f  rom the Apollo Lunar
                     Surface Experiments Package, offering crucial insights into lunar seismicity and the Moon's internal
                     structure.
                     \item \textit{Mars InSight Mission Data:} Waveforms from NASA's Mars InSight mission, specifically from
@@ -333,65 +437,6 @@ Other studies have explored ML for analyzing data from the InSight mission to Ma
 Our Asteroseismology framework builds upon these foundations. It acknowledges the strengths of conventional algorithms like STA/LTA for initial, computationally cheap candidate generation, similar to some multi-stage earthquake detection systems on Earth. However, it significantly differs from approaches like Civilini et al. \cite{favPaper} by using a hybrid pipeline that feeds 1D waveform segments and engineered auxiliary features directly to the CNN, rather than relying solely on spectrograms. This aims to retain fine temporal details and leverage interpretable features, potentially enhancing both efficiency and robustness for onboard processing.
 
 \section{The Asteroseismology Framework}
-\label{sec:methodology}
-The Asteroseismology framework is designed as a multi-stage processing pipeline that integrates classical seismic signal processing techniques with a Convolutional Neural Network (CNN) for robust and efficient event detection. A schematic overview of the framework is shown in Fig.~\ref{fig:framework_overview}.
-
-% \begin{figure}[htbp]
-% \centerline{\includegraphics[width=\columnwidth]{placeholder_framework.png}} % Replace with your actual figure
-% \caption{Schematic overview of the Asteroseismology AI-driven seismic event detection framework. (This is a placeholder image; please create an actual diagram illustrating your workflow: Preprocessing -> Conventional Detection -> CNN Refinement -> Output.)}
-% \label{fig:framework_overview}
-% \end{figure}
-
-The workflow consists of three main stages: (1) Data Preprocessing, (2) Initial Event Picking using Conventional Algorithms, and (3) Final Event Refinement using a CNN.
-
-\subsection{Data Preprocessing}
-Raw seismic data from planetary seismometers often contains noise from various sources, including instrument effects, lander operations, and environmental factors. Effective preprocessing is crucial to enhance the signal-to-noise ratio (SNR) of potential seismic events.
-\begin{enumerate}
-    \item \textbf{Automatic Bandpass Filtering:} The system first aims to identify the optimal frequency band for each seismogram segment. This is achieved by analyzing the power spectrum or the standard deviation of the signal across different frequency windows. The bandpass filter then retains frequencies within this optimal window, attenuating noise outside the relevant seismic band. This adaptive approach allows the system to cater to different types of seismic sources and varying noise conditions.
-    \item \textbf{Outlier Removal:} Short-duration, high-amplitude spikes or glitches, which are common in raw seismic data, are identified and removed or attenuated. These outliers can otherwise disproportionately affect subsequent normalization and detection steps.
-    \item \textbf{Data Normalization:} The filtered and cleaned seismogram is then normalized (e.g., to zero mean and unit standard deviation, or min-max scaling) to ensure that the amplitude variations are on a consistent scale for further analysis by both conventional algorithms and the CNN.
-\end{enumerate}
-
-\subsection{Initial Event Picking (Conventional Algorithms)}
-Following preprocessing, a set of conventional algorithms are employed to identify potential candidate seismic events.
-\begin{enumerate}
-    \item \textbf{STA/LTA Analysis:} The classic Short-Term Average to Long-Term Average (STA/LTA) algorithm \cite{b14} is applied to the normalized data. The ratio of the average signal amplitude in a short trailing window (STA) to that in a long trailing window (LTA) is computed continuously. When this ratio exceeds a predefined trigger threshold, a potential event onset is declared. Similarly, a detrigger threshold is used to mark the end of the potential event. The lengths of the STA and LTA windows and the trigger/detrigger thresholds are among the system's tunable parameters.
-    \item \textbf{Filter Out Picks (Characteristic Function Analysis):} The STA/LTA algorithm can still generate a significant number of false positives from non-seismic transients. To mitigate this, an additional filtering step is introduced. For each candidate event identified by STA/LTA, a characteristic function is analyzed. This function typically represents the envelope or energy of the signal around the picked arrival. The slopes of the rise and fall of this characteristic function are examined. Genuine seismic events often exhibit specific rise and fall patterns distinct from noise bursts or instrument glitches. Picks that do not conform to expected seismic event characteristics (e.g., rise too slowly, fall too abruptly, or are too short/long) are discarded. This step significantly reduces the number of candidates passed to the computationally more intensive CNN stage.
-\end{enumerate}
-
-\subsection{Final Event Refinement Using CNN}
-The candidate events that pass the conventional algorithm filters are then subjected to final verification by a lightweight Convolutional Neural Network (CNN).
-\begin{enumerate}
-    \item \textbf{Input Preparation:} For each candidate event, a fixed-length 1D seismogram segment centered around the potential arrival time is extracted. In addition to the raw waveform data (e.g., a segment of shape (N,1), where N is the number of samples), auxiliary features are computed and provided as input to the CNN. These auxiliary inputs include statistical measures such as the standard deviation of the signal amplitude in windows immediately preceding and following the picked arrival time. These features provide the CNN with additional context about the signal characteristics and local noise levels.
-    \item \textbf{CNN Architecture:} A lightweight CNN architecture is employed, designed for computational efficiency suitable for onboard processing. The architecture typically consists of several convolutional layers with activation functions (e.g., ReLU), pooling layers for downsampling, and one or more fully connected layers leading to a final classification output (e.g., "event" or "noise"). The specifics of the architecture (number of layers, filter sizes, etc.) are optimized for performance and resource constraints. (Further details on the exact architecture would be provided here in a full paper).
-    \item \textbf{Training Data:} As mentioned in the abstract, the CNN is trained using seismic data from the Apollo Lunar Surface Experiments Package (ALSEP) \cite{b11} and NASA’s Mars InSight mission \cite{b12}. This involves curating datasets of known seismic events (moonquakes, marsquakes) and representative noise segments. Data augmentation techniques may be employed to increase the diversity and size of the training set.
-    \item \textbf{Classification:} The CNN outputs a probability score indicating the likelihood that the input segment represents a true seismic event. A threshold on this probability is used to make the final classification.
-\end{enumerate}
-
-\subsection{System Characteristics}
-\begin{itemize}
-    \item \textbf{Computational Efficiency:} The entire pipeline, particularly the lightweight nature of the CNN and the filtering action of the conventional stages, is optimized for speed. The system is designed to process extensive datasets rapidly, with the stated goal of analyzing a month's worth of continuous seismic data in under 60 seconds on an average processor.
-    \item \textbf{Tunable Parameters:} The Asteroseismology framework features six key tunable parameters. These include, for example, STA/LTA window lengths, trigger/detrigger thresholds, parameters governing the characteristic function analysis, and potentially thresholds for the CNN output probability. This tunability allows the system to be adapted and optimized for different planetary environments (e.g., Moon vs. Mars), varying instrument sensitivities, and specific mission science objectives.
-\end{itemize}
-
-This structured, hybrid approach ensures that computationally inexpensive methods perform the initial broad search, while the more sophisticated ML model focuses its resources on a reduced set of high-potential candidates, leading to an overall efficient and accurate detection system.
-
-\section{Results and Discussion}
-\label{sec:results_discussion}
-The performance of the Asteroseismology framework was evaluated using curated datasets derived from the Apollo ALSEP mission and the Mars InSight mission. This section presents the initial results focusing on detection accuracy, false positive rate, and computational efficiency.
-
-\subsection{Experimental Setup}
-\textbf{Datasets:} For training and testing the CNN component, seismic event catalogs and raw waveform data from ALSEP stations (e.g., Apollo 12, 14, 15, 16) and the SEIS instrument on InSight were utilized. Known moonquakes and marsquakes were labeled as positive examples, while segments identified as noise (instrumental, environmental, or lander-induced) served as negative examples. [Specific details on dataset size, event types, and noise characteristics would be included here].
-
-\textbf{CNN Training:} The CNN was trained using [Specify optimizer, learning rate, batch size, number of epochs]. A portion of the data was reserved as a validation set to monitor training progress and prevent overfitting, and a separate test set was used for final performance evaluation.
-
-\textbf{Evaluation Metrics:} The primary metrics used to assess performance were:
-\begin{itemize}
-    \item Detection Accuracy: The percentage of true seismic events correctly identified by the system.
-    \item False Positive Rate (FPR): The percentage of noise segments incorrectly classified as seismic events.
-    \item Precision, Recall, and F1-Score: To provide a more nuanced view of the classifier's performance.
-\end{itemize}
-Computational efficiency was measured by the time taken to process a standard length of continuous seismic data (e.g., one month).
 
 \subsection{Performance Results}
 Initial evaluations of the Asteroseismology framework demonstrate promising results. The CNN component, even with what is currently considered limited training data and refinement, achieved a **detection accuracy of over 80\%** on the test set comprising both lunar and Martian seismic signals. This indicates the model's capability to generalize across different planetary environments and event characteristics.
@@ -476,8 +521,11 @@ The authors would like to thank the NASA Planetary Data System (PDS) for providi
     \bibitem{Banerdt2020} W. B. Banerdt et al., ``Initial results from the InSight mission on Mars,'' \emph{Nature Geoscience}, vol. 13, pp. 183--189, Mar. 2020.
     \bibitem{Giardini2020} D. Giardini et al., ``The seismicity of Mars,'' \emph{Nature Geoscience}, vol. 13, pp. 205--212, 2020.
     \bibitem{Clinton2021} J. F. Clinton et al., ``The Marsquake catalogue from InSight, sols 0--478,'' \emph{Phys. Earth Planet. Inter.}, vol. 310, Art. no. 106595, 2021
-    \bibitem{MousaviBeroza2022} S. M. Mousavi and G. C. Beroza, ``Deep-learning seismology,'' \emph{Science}, vol. 377, no. 6606, p. eabm4470, Aug. 2022, doi: 10.1126/science.abm4470.   % \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73. 
-    \bibitem{Beyreuther2010} M. Beyreuther, R. Barsch, L. Krischer, T. Megies, Y. Behr, and J. Wassermann, "ObsPy: A Python toolbox for seismology," Seismological Research Letters, vol. 81, no. 3, pp. 530-533, 2010.   % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
+    \bibitem{MousaviBeroza2022} S. M. Mousavi and G. C. Beroza, ``Deep-learning seismology,'' \emph{Science}, vol. 377, no. 6606, p. eabm4470, Aug. 2022, doi: 10.1126/science.abm4470.   
+    \bibitem{Beyreuther2010} M. Beyreuther, R. Barsch, L. Krischer, T. Megies, Y. Behr, and J. Wassermann, "ObsPy: A Python toolbox for seismology," Seismological Research Letters, vol. 81, no. 3, pp. 530-533, 2010.
+    \bibitem{Chollet2021} F. Chollet, "Deep Learning with Python," Simon and Schuster, 2021.
+    \bibitem{Kingma2014} D. P. Kingma and J. Ba, "Adam: A method for stochastic optimization," arXiv preprint arXiv:1412.6980, 2014.
+    % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
     % \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished. 
     % \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press. 
     % \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982]. 
