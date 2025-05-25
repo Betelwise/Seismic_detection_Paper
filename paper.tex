@@ -13,9 +13,6 @@
 \begin{document}
 
 \title{Asteroseismology: AI-Driven Seismic Event Detection for Extra-Terrestrial Missions\\
-    % {\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
-    % should not be used}
-    \thanks{This work was supported in part by [Identify applicable funding agency here if any, otherwise delete or state self-funded].}
 }
 
 \author{\IEEEauthorblockN{Muhammad Zain Ali}
@@ -204,31 +201,77 @@ conventional filtering. This hybrid architecture aims to optimize both computati
 for planetary missions.
     
     \subsection{Initial Processing and Candidate Events Selection(IPCS)}%TODO refine heading
-    (This entire subsection is a major differentiator from purely ML-driven approaches like Civilini et al.'s direct
-    spectrogram-to-CNN method. You're showing a sophisticated "front-end".)
+        The Initial Processing and Candidate Selection (IPCS) stage of the framework employs a series of conventional
+        seismic signal processing techniques to enhance signal clarity, identify potential seismic events, and reduce
+        the number of candidates passed to the subsequent machine learning stage. This stage operates on individual
+        seismogram segments loaded from MiniSEED files.
     
         \subsubsection{Adaptive Bandpass Filtering}
-        (Your method for "Freq AnimationFinding the Best Bandpass Frequency": power spectrum analysis or standard
-            deviation analysis. Tunable parameters involved.)
+            To isolate frequencies most likely to contain seismic signals and attenuate background noise, an adaptive
+            bandpass filtering approach is implemented. The system iteratively evaluates a series of predefined
+            frequency ranges. For each range, defined by a starting frequency  and a fixed window size , a bandpass
+            filter is applied to a copy of the original trace.
+            
+            The optimal frequency band is determined by one of two methods, selectable by the user:
+            
+            \begin{enumerate}[label=\alph*), leftmargin=3em]
+                \item \textit{Power Spectrum Analysis:} The spectrogram of the filtered signal is computed.
+                The power values across all frequencies and time points within the spectrogram are flattened, and the average of
+                a predefined number (e.g., top 50 or 1000) of the highest power values is calculated. The frequency range
+                yielding the maximum average power among these top values is selected as the optimal band. This method
+                prioritizes frequency bands where signal energy is most concentrated.
+                \item \textit{Standard Deviation Analysis:} The filtered trace data is normalized, and its
+                standard deviation is calculated. The frequency range that results in the minimum standard deviation of the
+                normalized filtered signal is chosen as the optimal band. This method aims to find a frequency band where the
+                signal is most distinct from broadband noise, assuming that a lower standard deviation in a filtered signal
+                (after normalization) might indicate a clearer, less noisy signal.
+            \end{enumerate}
 
-            \subsubsection{Noise and Outlier Mitigation}
-            (Techniques for removing short, high-amplitude noises and other artifacts.)
+        \subsubsection{Noise and Outlier Mitigation}
+            Following the adaptive bandpass filtering, further steps are taken to mitigate noise. If resampling is
+            configured , the filtered trace is resampled to a target frequency (e.g., 6.625Hz, reminiscent of Apollo-era
+            sampling rates, though this is a tunable parameter). Subsequently, a threshold-based outlier removal is applied.
+            Data points in the filtered trace whose absolute values exceed a multiple (e.g., 26 times) of the trace's
+            standard deviation are considered outliers and are clipped to the standard deviation value. This step aims to
+            reduce the impact of short, high-amplitude glitches that might otherwise distort normalization or trigger false
+            STA/LTA detections.
 
         \subsubsection{Data Normalization}
-            (Method used for consistent scaling.)
-
+            After outlier removal, the filtered trace data is normalized to a consistent amplitude range,
+            typically between -1 and 1. This is achieved using min-max scaling:
+            
+            Normalization ensures that subsequent amplitude-based detection algorithms, like STA/LTA, operate on a
+            consistent scale regardless of the original signal's absolute amplitude.
+                
         \subsubsection{STA\slash LTA Analysis for Initial Detection}
-            (Standard STA\slash LTA application: window lengths, thresholds. This is a common baseline.)
+            Potential seismic event onsets are identified using the classic Short-Term Average to Long-Term Average
+            (STA/LTA) algorithm, as implemented in Obspy \cite{Beyreuther2010}. The algorithm is applied
+            to the absolute values of the normalized and filtered trace data. The lengths of the short-term window
+            and long-term window, as well as the trigger-on threshold and trigger-off threshold, are configurable parameters. The trigger-off threshold is dynamically set based on the average of the
+            characteristic function (CFT) generated by the STA/LTA algorithm. This results in a set of on-off time pairs,
+            marking the start and end times of candidate detections.
 
-        \subsubsection{Candidate Pick Refinement using Characteristic Function Analysis}
-        \label{sec:candidate_refinement}
-            (Detail this specific filtering mechanism based on rise/fall slopes. This is likely a novel or specifically
-            adapted part of your conventional pipeline and should be emphasized.)
+        % \subsubsection{Candidate Pick Refinement using Characteristic Function Analysis}
+        %     Not all STA/LTA triggers correspond to genuine seismic events. The Asteroseismology framework incorporates a
+        %     refinement step based on the duration and number of STA/LTA triggers. Specifically, from the on-off pairs
+        %     generated by STA/LTA, only those triggers where the duration (triggers[1] - triggers[0]) exceeds a certain
+        %     minimum (e.g., 1200 samples, equivalent to approximately 3 minutes at 6.625 Hz if resampled) OR if the total
+        %     number of triggers for the seismogram is below a certain count (e.g., less than 10) are considered for
+        %     further processing. This heuristic aims to filter out very short, isolated triggers that are less likely to
+        %     be significant seismic events while retaining detections from seismograms with sparse activity. Events
+        %     passing this refinement are then considered qualified candidates for the subsequent machine learning stage.
+        %     [Note: The provided code's characteristic function slope analysis is not explicitly implemented in the
+        %     detect_events function snippet, but rather implied as a general concept in your abstract. If you have a
+        %     separate code module for that, we'd need to describe it. The current code filters based on duration/count of
+        %     STA/LTA triggers.]
+        % \label{sec:candidate_refinement}
+        %     (Detail this specific filtering mechanism based on rise/fall slopes. This is likely a novel or specifically
+        %     adapted part of your conventional pipeline and should be emphasized.)
             
     \subsection{Machine Learning Stage: CNN-based Event Refinement}
 
     \subsubsection{Input Feature Construction for the CNN}
-        (How candidate events from \ref{sec:candidate_refinement} are prepared for the CNN.) 1D Seismogram Segments:
+        (How candidate events from are prepared for the CNN.) 1D Seismogram Segments:
         Length (e.g., 5565 samples), channels used. Auxiliary Features: Explicitly detail the "Standard deviation values
         before and after the Arrival time." Justify why these features are chosen and what information they provide to
         the network. (Highlighting point: Civilini et al. used 2D spectrograms. Your use of 1D waveforms + explicitly
@@ -434,7 +477,7 @@ The authors would like to thank the NASA Planetary Data System (PDS) for providi
     \bibitem{Giardini2020} D. Giardini et al., ``The seismicity of Mars,'' \emph{Nature Geoscience}, vol. 13, pp. 205--212, 2020.
     \bibitem{Clinton2021} J. F. Clinton et al., ``The Marsquake catalogue from InSight, sols 0--478,'' \emph{Phys. Earth Planet. Inter.}, vol. 310, Art. no. 106595, 2021
     \bibitem{MousaviBeroza2022} S. M. Mousavi and G. C. Beroza, ``Deep-learning seismology,'' \emph{Science}, vol. 377, no. 6606, p. eabm4470, Aug. 2022, doi: 10.1126/science.abm4470.   % \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73. 
-    % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
+    \bibitem{Beyreuther2010} M. Beyreuther, R. Barsch, L. Krischer, T. Megies, Y. Behr, and J. Wassermann, "ObsPy: A Python toolbox for seismology," Seismological Research Letters, vol. 81, no. 3, pp. 530-533, 2010.   % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
     % \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished. 
     % \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press. 
     % \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982]. 
