@@ -166,7 +166,54 @@
         (MQS) is responsible for ongoing event detection and cataloging, employing a combination of traditional and
         evolving ML-assisted techniques \cite{Clinton2021}.
 
-        %TODO add a section on only CNNs ================================================================
+    % \subsection{Fundamentals of Machine Learning and Convolutional Neural Networks}
+    %     Machine learning (ML) encompasses a broad class of algorithms that enable computer systems to learn from data
+    %     without being explicitly programmed for each specific task. These algorithms identify patterns, make
+    %     predictions, and improve their performance over time as they are exposed to more data. Neural Networks (NNs),
+    %     inspired by the structure and function of the human brain, are a prominent subset of ML models. They consist of
+    %     interconnected layers of nodes, or "neurons," where each connection has an associated weight. During a learning
+    %     process, these weights are iteratively adjusted to minimize the difference between the network's output and the
+    %     desired output, typically through optimization algorithms like stochastic gradient descent (Goodfellow et al.,
+    %     2016).
+
+    %     Deep Learning refers to NNs with multiple hidden layers between the input and output layers. These "deep"
+    %     architectures allow the model to learn hierarchical representations of data, where simpler features are combined
+    %     in lower layers to form more complex and abstract features in higher layers. This capability for automatic
+    %     feature learning is one of the key strengths of deep learning.
+
+    %     Convolutional Neural Networks (CNNs) are a specialized type of deep neural network particularly well-suited for
+    %     processing data that has a grid-like topology, such as images (2D grids of pixels) or time-series data (1D grid
+    %     of sequential measurements) (LeCun et al., 1989; Goodfellow et al., 2016). The architecture of CNNs is designed
+    %     to exploit spatial or temporal invariances in the data. Key components of a CNN include:
+
+    %     Convolutional Layers: These layers apply a set of learnable filters (kernels) to the input data. Each filter
+    %     slides across the input, performing a convolution operation to detect specific local patterns or features (e.g.,
+    %     edges in an image, or characteristic onsets in a seismic waveform). A crucial aspect is weight sharing, where
+    %     the same filter is used across different parts of the input, significantly reducing the number of parameters and
+    %     enabling the detection of features regardless of their position. The output of these operations forms feature
+    %     maps.
+
+    %     Activation Functions: Non-linear activation functions, such as the Rectified Linear Unit (ReLU) (f(x) = max(0,
+    %     x)), are typically applied after convolutional layers to introduce non-linearity into the model, enabling it to
+    %     learn more complex relationships (Nair and Hinton, 2010).
+
+    %     Pooling Layers: These layers perform down-sampling, typically by taking the maximum (max pooling) or average
+    %     value within a local region of a feature map. Pooling reduces the dimensionality of the data, makes the learned
+    %     features more robust to small translations, and helps control overfitting.
+
+    %     Fully Connected Layers: After several convolutional and pooling layers, the high-level features are often
+    %     flattened into a 1D vector and fed into one or more fully connected layers. These layers perform classification
+    %     or regression based on the learned features, similar to traditional NNs.
+
+    %     Output Layer: The final layer produces the desired output, such as class probabilities (e.g., using a sigmoid or
+    %     softmax activation for classification) or continuous values (e.g., using a linear activation for regression).
+
+    %     The power of CNNs lies in their ability to automatically and adaptively learn a hierarchy of features directly
+    %     from the raw input data, making them highly effective for tasks like image recognition, natural language
+    %     processing, and, as increasingly demonstrated, the analysis of geophysical time-series data. This capacity for
+    %     end-to-end learning, from raw data to output prediction, reduces the need for extensive manual feature
+    %     engineering that was characteristic of many traditional ML approaches (Civilini et al., 2021; Mousavi and
+    %     Beroza, 2022).
 
     \subsection{ Machine Learning Paradigms in Seismology }
         The increasing volume and complexity of seismic data from both terrestrial and planetary missions have spurred the
@@ -516,8 +563,8 @@ potentially enhancing both efficiency and robustness for onboard processing.
 % \label{fig:roc_curve}
 % \end{figure}
 
-\subsection{Computational Efficiency}
-The system's design prioritizes computational efficiency for potential onboard deployment. Tests conducted on a standard desktop processor (e.g., specifying CPU type and clock speed) confirmed that the Asteroseismology framework can process one month of continuous, single-component seismic data in **under 60 seconds**. This rapid processing capability is essential for near real-time analysis on resource-constrained spacecraft hardware. The efficiency stems from the fast conventional algorithms handling the bulk of the data and the lightweight CNN operating only on a filtered subset of candidate events.
+% \subsection{Computational Efficiency}
+% The system's design prioritizes computational efficiency for potential onboard deployment. Tests conducted on a standard desktop processor (e.g., specifying CPU type and clock speed) confirmed that the Asteroseismology framework can process one month of continuous, single-component seismic data in **under 60 seconds**. This rapid processing capability is essential for near real-time analysis on resource-constrained spacecraft hardware. The efficiency stems from the fast conventional algorithms handling the bulk of the data and the lightweight CNN operating only on a filtered subset of candidate events.
 
 % \subsection{Adaptability and Tunability}
 % The six tunable parameters within the framework allow for significant adaptation to different mission requirements. For example, on a mission expecting very subtle seismic signals, the STA/LTA trigger thresholds and characteristic function parameters can be adjusted for higher sensitivity, potentially at the cost of passing more candidates to the CNN. Conversely, in a very noisy environment or when bandwidth is extremely limited, parameters can be set more conservatively to prioritize only the clearest events. This flexibility is a key advantage for diverse planetary targets and mission phases.
@@ -547,49 +594,87 @@ The system's design prioritizes computational efficiency for potential onboard d
 % biases or incompleteness. Future work could involve semi-supervised learning approaches to leverage larger amounts of
 % unlabeled data.
 
+% \section{Conclusion and Future Work}
+% \label{sec:conclusion}
+% This paper has introduced Asteroseismology, an AI-driven hybrid framework for seismic event detection tailored for the
+% unique constraints of extra-terrestrial missions. By synergistically combining classical seismic processing algorithms
+% with a lightweight Convolutional Neural Network, our system demonstrates the potential for highly efficient and accurate
+% autonomous onboard data analysis. The framework's ability to process a month of seismic data in under a minute, coupled
+% with its adaptability through tunable parameters and promising initial detection accuracy of over 80\% with a low false
+% positive rate of approximately 5\%, underscores its suitability for optimizing data telemetry from missions to the Moon,
+% Mars, and beyond.
+
+% The successful application of this framework to data from both the Apollo ALSEP and Mars InSight missions indicates its
+% versatility in handling diverse seismic environments and instrument characteristics. This significantly reduces the
+% reliance on manual or semi-automatic ground-based processing, enabling faster scientific turnaround and more efficient
+% use of limited deep-space communication resources.
+
+% Future work can focus on several key areas to further enhance the framework:
+% \begin{enumerate}
+%     \item \textbf{CNN Architecture and Training Refinement:} Exploring more advanced CNN architectures and expand
+%     the training dataset significantly. This will include incorporating a wider variety of seismic event types, noise
+%     profiles, and employing sophisticated data augmentation techniques to improve generalization and robustness.
+%     \item \textbf{Integration with Auxiliary Classifier Conditional GAN (AC-GAN):} A primary future development is the
+%     refinement of the CNN within an AC-GAN framework \cite{b22}. AC-GANs can be used to generate more realistic
+%     synthetic seismic data for training, particularly for rare event types, and can also improve the classifier's
+%     ability to distinguish subtle differences between event classes and noise by simultaneously learning to classify and
+%     generate data. This is expected to further improve detection reliability and reduce false positives.
+%     \item \textbf{Enhanced Auxiliary Features:} We will investigate the inclusion of a richer set of physics-informed
+%     auxiliary features for the CNN, derived from more detailed analysis of the candidate event waveforms by the
+%     conventional algorithms.
+%     \item \textbf{Onboard Implementation Prototyping:} Efforts will be made to prototype the system on hardware
+%     representative of spacecraft processors (e.g., FPGAs or radiation-hardened CPUs) to rigorously evaluate its
+%     performance under realistic resource constraints.
+%     \item \textbf{Expansion to Other Planetary Bodies:} While currently focused on lunar and Martian data, the
+%     framework's adaptable design makes it a candidate for future missions to other seismically active bodies like Europa
+%     or Titan, with appropriate tuning and training data.
+% \end{enumerate}
+
+% In conclusion, the framework represents a significant step towards enabling more autonomous and scientifically
+% productive planetary seismology missions. By intelligently managing data at the source, it helps to overcome critical
+% mission constraints, paving the way for deeper and more comprehensive exploration of the internal structures of
+% celestial bodies in our solar system.
 \section{Conclusion and Future Work}
-\label{sec:conclusion}
-This paper has introduced Asteroseismology, an AI-driven hybrid framework for seismic event detection tailored for the
-unique constraints of extra-terrestrial missions. By synergistically combining classical seismic processing algorithms
-with a lightweight Convolutional Neural Network, our system demonstrates the potential for highly efficient and accurate
-autonomous onboard data analysis. The framework's ability to process a month of seismic data in under a minute, coupled
-with its adaptability through tunable parameters and promising initial detection accuracy of over 80\% with a low false
-positive rate of approximately 5\%, underscores its suitability for optimizing data telemetry from missions to the Moon,
-Mars, and beyond.
+This paper has presented Asteroseismology, an AI-driven hybrid framework designed for efficient seismic event detection
+on extra-terrestrial missions. Our system combines classical seismic processing with a lightweight Convolutional Neural
+Network (CNN) and demonstrates strong potential for autonomous, onboard data analysis. The framework's rapid processing
+capability (a month of data in under 60 seconds), adaptability through tunable parameters, and initial detection
+accuracy exceeding 80\% with a false positive rate around 5%, highlight its suitability for optimizing data telemetry
+from missions to the Moon, Mars, and potentially other planetary bodies.
 
-The successful application of this framework to data from both the Apollo ALSEP and Mars InSight missions indicates its
-versatility in handling diverse seismic environments and instrument characteristics. This significantly reduces the
-reliance on manual or semi-automatic ground-based processing, enabling faster scientific turnaround and more efficient
-use of limited deep-space communication resources.
+By successfully processing data from both the Apollo ALSEP and Mars InSight missions, Asteroseismology shows versatility
+in handling diverse seismic environments. This reduces the need for extensive manual ground-based processing, allowing
+for quicker scientific insights and more effective use of limited deep-space communication resources.
 
-Future work can focus on several key areas to further enhance the framework:
+To further enhance the Asteroseismology framework, future efforts can be directed towards several key areas:
 \begin{enumerate}
-    \item \textbf{CNN Architecture and Training Refinement:} Exploring more advanced CNN architectures and expand
-    the training dataset significantly. This will include incorporating a wider variety of seismic event types, noise
-    profiles, and employing sophisticated data augmentation techniques to improve generalization and robustness.
-    \item \textbf{Integration with Auxiliary Classifier Conditional GAN (AC-GAN):} A primary future development is the
-    refinement of the CNN within an AC-GAN framework \cite{b22}. AC-GANs can be used to generate more realistic
-    synthetic seismic data for training, particularly for rare event types, and can also improve the classifier's
-    ability to distinguish subtle differences between event classes and noise by simultaneously learning to classify and
-    generate data. This is expected to further improve detection reliability and reduce false positives.
-    \item \textbf{Enhanced Auxiliary Features:} We will investigate the inclusion of a richer set of physics-informed
-    auxiliary features for the CNN, derived from more detailed analysis of the candidate event waveforms by the
-    conventional algorithms.
-    \item \textbf{Onboard Implementation Prototyping:} Efforts will be made to prototype the system on hardware
-    representative of spacecraft processors (e.g., FPGAs or radiation-hardened CPUs) to rigorously evaluate its
-    performance under realistic resource constraints.
-    \item \textbf{Expansion to Other Planetary Bodies:} While currently focused on lunar and Martian data, the
-    framework's adaptable design makes it a candidate for future missions to other seismically active bodies like Europa
-    or Titan, with appropriate tuning and training data.
+\item \textit{Advanced CNN Development and Training Data Expansion:} Future iterations will explore more sophisticated
+CNN architectures. Expanding the training dataset with a greater variety of seismic event types and noise profiles,
+along with advanced data augmentation techniques, will be crucial for improving the model's generalization and
+robustness across different planetary conditions.
+\item \textit{Generative Adversarial Networks (GANs) for Data Augmentation and Feature Learning:} Inspired by
+applications in terrestrial seismology where GANs have been used for tasks like seismic wave discrimination (e.g., \cite{Li2018} who used a GAN critic as a feature extractor), we plan to investigate the use of GANs, potentially AC-GANs
+\cite{Odena2017}, to generate realistic synthetic planetary seismic data. This could be particularly beneficial for
+augmenting training sets with rare event types and improving the classifier's ability to distinguish subtle event
+characteristics.
+\item \textit{Physics-Informed Neural Networks (PINNs) and Enhanced Auxiliary Features:} We will investigate the
+inclusion of a richer set of auxiliary features for the CNN, derived from more detailed physical analysis of candidate
+event waveforms. Furthermore, exploring Physics-Informed Neural Networks (PINNs), which are gaining momentum in
+seismology (Mousavi and Beroza, 2022), could allow for the incorporation of known physical constraints directly into the
+ML model, potentially leading to more robust and interpretable event detection.
+\item \textit{Onboard Implementation and Prototyping:} A critical next step is to prototype and rigorously evaluate the
+Asteroseismology system on hardware representative of spacecraft processors (e.g., FPGAs or radiation-hardened CPUs) to
+assess its performance under realistic mission resource constraints.
+\item \textit{Adaptation to Other Celestial Bodies:} The framework's adaptable design makes it a promising candidate for
+future missions to other seismically active bodies, such as Europa or Titan. This would involve tuning parameters and
+retraining the CNN with appropriate simulated or acquired data specific to those environments.
 \end{enumerate}
-
-In conclusion, the framework represents a significant step towards enabling more autonomous and scientifically
-productive planetary seismology missions. By intelligently managing data at the source, it helps to overcome critical
-mission constraints, paving the way for deeper and more comprehensive exploration of the internal structures of
-celestial bodies in our solar system.
+In conclusion, the Asteroseismology framework offers a significant advancement towards more autonomous and scientifically productive planetary seismology missions. By enabling intelligent data management at the source, it helps overcome critical mission constraints, paving the way for deeper exploration and understanding of the internal structures of celestial bodies within our solar system.
 
 \section*{Acknowledgment}
-The authors would like to thank the NASA Planetary Data System (PDS) for providing access to the Apollo ALSEP and Mars InSight mission data. We also acknowledge the developers of open-source software packages used in this research, including [mention specific libraries like Obspy, TensorFlow/Keras, Scikit-learn if used].
+The authors would like to thank the NASA Planetary Data System (PDS) for providing access to the Apollo ALSEP and Mars
+InSight mission data. We also acknowledge the developers of open-source software packages used in this research,
+including.%TODO; acknolees
 
 \begin{thebibliography}{00}
     \bibitem{Civilini2021} F. Civilini, R.C. Weber, Z. Jiang, D. Phillips, and W. David Pan, ``Detecting moonquakes using convolutional neural networks, a non-local training set, and transfer learning,'' \emph{Geophys. J. Int.}, vol. 225, no. 3, pp. 2120--2134, Mar. 2021.
@@ -610,6 +695,7 @@ The authors would like to thank the NASA Planetary Data System (PDS) for providi
     \bibitem{Beyreuther2010} M. Beyreuther, R. Barsch, L. Krischer, T. Megies, Y. Behr, and J. Wassermann, "ObsPy: A Python toolbox for seismology," Seismological Research Letters, vol. 81, no. 3, pp. 530-533, 2010.
     \bibitem{Chollet2021} F. Chollet, "Deep Learning with Python," Simon and Schuster, 2021.
     \bibitem{Kingma2014} D. P. Kingma and J. Ba, "Adam: A method for stochastic optimization," arXiv preprint arXiv:1412.6980, 2014.
+    \bibitem{Li2018} Z. Li, M.-A. Meier, E. Hauksson, Z. Zhan, and J. Andrews, "Machine learning seismic wave discrimination: Application to earthquake early warning," \emph{Geophysical Research Letters}, vol. 45, pp. 4773–4779, 2018.
     % \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350. 
     % \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished. 
     % \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press. 
